@@ -11,3 +11,13 @@
  *= require_self
  *= require_tree .
  */
+
+h1 {
+  font-family: Futura, serif;
+  font-weight: normal;
+  text-align: center;
+}
+
+body {
+  text-align: center;
+}
