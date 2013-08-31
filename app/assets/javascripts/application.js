@@ -14,57 +14,41 @@
 //= require jquery_ujs
 //= require_tree .
 
-ROT.Map.Arkham = function(width, height) {
-  ROT.Map.call(this, width, height);
-
-  this._map = this._fillMap(0);
-};
-
-ROT.Map.Cellular.extend(ROT.Map);
-
 $(function() {
-
-  // debugger;
 
   var Game = {
     display: null,
-    map: {},
+    map: [],
+    MAP_WIDTH: 140,
+    MAP_HEIGHT: 40,
 
     init: function() {
-        this.display = new ROT.Display({ width: 130, height: 40, fontSize: 13 });
+        this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
         document.body.appendChild(this.display.getContainer());
         this._generateMap();
     },
 
     _generateMap: function() {
 
-      var w = 130, h = 40;
-      var map = new ROT.Map(w, h);
+      var arkham = new ROT.Map.Arkham(anEmptyMap);
 
-      /* cells with 1/2 probability */
-      map.randomize(0.5);
-
-      var cellback = function(x, y, value) {
-          if (value) { return; }
-
-          var key = x+","+y;
-          this.map[key] = ".";
-      };
-
-      map.create(cellback.bind(this));
-
+      map.create(this.arkhamCallback.bind(this));
       this._drawWholeMap();
 
     },
 
+    arkhamCallback: function(x, y, value) {
+      this.map[i][j] = value;
+    },
+
     _drawWholeMap: function() {
-        for (var key in this.map) {
-            var parts = key.split(",");
-            var x = parseInt(parts[0]);
-            var y = parseInt(parts[1]);
-            this.display.draw(x, y, this.map[key]);
+      for (var x=0; x<this.MAP_WIDTH; x+=1) {
+        for (var y=0; y<this.MAP_HEIGHT; y+=1) {
+          this.display.draw(x, y, this.map[x][y]);
         }
-    }
+      }
+    } // end drawWholeMap
+
   };
 
   Game.init();

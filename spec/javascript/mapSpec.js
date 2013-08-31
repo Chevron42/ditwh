@@ -1,12 +1,10 @@
-
-
-describe("a map", function() {
+describe("a map of Arkham", function() {
 
   var map = new ROT.Map.Arkham();
 
-  it("is 130 characters wide and 40 characters high", function() {
-    expect(map._width).toEqual(130);
-    expect(map.height).toEqual(40);
+  it("is 140 characters wide and 40 characters high", function() {
+    expect(map._width).toEqual(140);
+    expect(map._height).toEqual(40);
   });
 
   it("has a path to the eastern tower", function() {

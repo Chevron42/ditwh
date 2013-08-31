@@ -2,6 +2,8 @@ Ditwh::Application.routes.draw do
 
   root :to => 'welcome#index'
 
+  get '/welcome/map' => 'welcome#map'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
