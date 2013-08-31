@@ -16,41 +16,6 @@
 
 $(function() {
 
-  var Game = {
-    display: null,
-    map: [],
-    MAP_WIDTH: 140,
-    MAP_HEIGHT: 40,
-
-    init: function() {
-        this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
-        document.body.appendChild(this.display.getContainer());
-        this._generateMap();
-    },
-
-    _generateMap: function() {
-
-      var arkham = new ROT.Map.Arkham(anEmptyMap);
-
-      map.create(this.arkhamCallback.bind(this));
-      this._drawWholeMap();
-
-    },
-
-    arkhamCallback: function(x, y, value) {
-      this.map[i][j] = value;
-    },
-
-    _drawWholeMap: function() {
-      for (var x=0; x<this.MAP_WIDTH; x+=1) {
-        for (var y=0; y<this.MAP_HEIGHT; y+=1) {
-          this.display.draw(x, y, this.map[x][y]);
-        }
-      }
-    } // end drawWholeMap
-
-  };
-
   Game.init();
 
 });

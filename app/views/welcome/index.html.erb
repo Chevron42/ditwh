@@ -5,5 +5,12 @@
     </head>
     <body>
         <h1>dreams in the witch house</h1>
+
+
     </body>
 </html>
+
+<%= javascript_tag do %>
+  window.map = <%=raw @map.to_json %>;
+  console.log(window.map);
+<% end %>
