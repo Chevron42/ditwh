@@ -28,7 +28,7 @@ ROT.Map.Arkham = function (width, height) {
     this_height = this.HEIGHT;
     this.map[i] = [];
     for (j = 0; j < this_height; j += 1) {
-      this.map[i].push(anEmptyMap[i][j]);
+      this.map[i].push(new Tile(anEmptyMap[i][j]));
     }
   }
 
@@ -130,22 +130,31 @@ ROT.Map.Arkham.prototype.create = function () {
     var endWidth = sector.upperRight[0];
     var startHeight = sector.upperLeft[1];
     var endHeight = sector.lowerRight[1];
+
     var rand;
-    var tile;
+    var aChar;
+    var trap = false;
 
     // first, let's generate some mazes and mark maze
     for (i = startWidth; i < endWidth; i += 1) {
       for (j = startHeight; j < endHeight; j += 1) {
-        if (this.map[i][j] !== ' ') {
+        if (this.map[i][j].value !== ' ') {
 
           rand = ROT.RNG.getUniform();
           if (rand < 0.29) {
-            tile = sector.traps[0];
-          } else if (rand < 0.59) {
-            tile = sector.traps[1];
-          } else { tile = this.TILE.SAFE; }
+            aChar = sector.traps[0];
+            trap = true;
+          }
+          else if (rand < 0.59) {
+            aChar = sector.traps[1];
+            trap = true;
+          }
+          else {
+            aChar = this.TILE.SAFE;
+          }
 
-          this.map[i][j] = tile;
+          this.map[i][j].value = aChar;
+          this.map[i][j].isTrap = trap;
         }
       }
     }
