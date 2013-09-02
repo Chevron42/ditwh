@@ -60,6 +60,10 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [46, 0],
     lowerLeft: [9, 41],
     lowerRight: [46, 41],
+    mazeUpperLeft: [],
+    mazeUpperRight: [],
+    mazeLowerLeft: [],
+    mazeLowerRight: [],
     traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2]
   };
 
@@ -69,6 +73,10 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [130, 0],
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
+    mazeUpperLeft: [],
+    mazeUpperRight: [],
+    mazeLowerLeft: [],
+    mazeLowerRight: [],
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
   };
 
@@ -78,6 +86,10 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 28],
     lowerLeft: [46, 35],
     lowerRight: [96, 35],
+    mazeUpperLeft: [],
+    mazeUpperRight: [],
+    mazeLowerLeft: [],
+    mazeLowerRight: [],
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
   };
 
@@ -87,6 +99,10 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 7],
     lowerLeft: [46, 14],
     lowerRight: [96, 14],
+    mazeUpperLeft: [],
+    mazeUpperRight: [],
+    mazeLowerLeft: [],
+    mazeLowerRight: [],
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
   };
 
@@ -116,6 +132,8 @@ ROT.Map.Arkham.prototype.create = function () {
     var endHeight = sector.lowerRight[1];
     var rand;
     var tile;
+
+    // first, let's generate some mazes and mark maze
     for (i = startWidth; i < endWidth; i += 1) {
       for (j = startHeight; j < endHeight; j += 1) {
         if (this.map[i][j] !== ' ') {
@@ -131,6 +149,8 @@ ROT.Map.Arkham.prototype.create = function () {
         }
       }
     }
+
+
   }
 
   return this.map;
