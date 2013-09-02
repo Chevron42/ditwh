@@ -1,6 +1,6 @@
-describe("a map of Arkham", function() {
+var map = new ROT.Map.Arkham(141, 41);
 
-  var map = new ROT.Map.Arkham();
+describe("a map of Arkham", function() {
 
   it("is 141 characters wide and 41 characters high", function() {
     expect(map._width).toEqual(141);

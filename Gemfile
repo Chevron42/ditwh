@@ -21,7 +21,7 @@ group :assets do
 end
 
 group :test, :development do
-  # gem 'pry'
+  gem 'jasmine-rails'
 end
 
 gem 'jquery-rails'

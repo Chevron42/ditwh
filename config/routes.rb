@@ -6,5 +6,5 @@ Ditwh::Application.routes.draw do
   get '/map' => 'welcome#index'
   get '/welcome/map' => 'welcome#map'
 
-
+  mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
 end

@@ -7,7 +7,8 @@ ROT.Map.Arkham = function (width, height) {
   var i = 0,
     this_width = width,
     j,
-    this_height;
+    this_height,
+    anEmptyMap;
 
   $.ajax({
     url: '/map.json',
@@ -64,9 +65,9 @@ ROT.Map.Arkham = function (width, height) {
 
   // east sector
   this.ARKHAM_SQ = {
-    upperLeft: [93, 0],
+    upperLeft: [97, 0],
     upperRight: [130, 0],
-    lowerLeft: [93, 41],
+    lowerLeft: [97, 41],
     lowerRight: [130, 41],
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
   };
@@ -74,18 +75,18 @@ ROT.Map.Arkham = function (width, height) {
   // south sector
   this.FOREST = {
     upperLeft: [46, 28],
-    upperRight: [93, 28],
+    upperRight: [96, 28],
     lowerLeft: [46, 35],
-    lowerRight: [93, 35],
+    lowerRight: [96, 35],
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
   };
 
   // north sector
   this.MEADOW_HILL = {
     upperLeft: [46, 7],
-    upperRight: [93, 7],
+    upperRight: [96, 7],
     lowerLeft: [46, 14],
-    lowerRight: [93, 14],
+    lowerRight: [96, 14],
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
   };
 
@@ -103,7 +104,6 @@ ROT.Map.Arkham = function (width, height) {
 ROT.Map.Arkham.extend(ROT.Map);
 
 ROT.Map.Arkham.prototype.create = function () {
-  console.log(this.map);
   var s,
     j,
     i,
@@ -121,21 +121,17 @@ ROT.Map.Arkham.prototype.create = function () {
         if (this.map[i][j] !== ' ') {
 
           rand = ROT.RNG.getUniform();
-          if (rand < 0.19) {
+          if (rand < 0.29) {
             tile = sector.traps[0];
-          } else if (rand < 0.39) {
+          } else if (rand < 0.59) {
             tile = sector.traps[1];
           } else { tile = this.TILE.SAFE; }
 
           this.map[i][j] = tile;
-          if (sector === this.FOREST) {
-            console.log('set ' + i + ',' + j + ' to ' + tile);
-          }
         }
       }
     }
   }
 
-  console.log(this.map);
   return this.map;
 };
