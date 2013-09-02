@@ -10,18 +10,15 @@ var Game = {
     document.body.appendChild(this.display.getContainer());
     this._generateMap();
 
-    var scheduler = new ROT.Scheduler.Simple();
-    scheduler.add(this.player, true);
-    this.engine = new ROT.Engine(scheduler);
-    debugger;
-    this.engine.start();
+    // debugger;
+    // this.engine.start();
   },
 
   _generateMap: function() {
 
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT, window.map);
 
-    // map.create(this.arkhamCallback.bind(this));
+    arkham.create();
     this._drawWholeMap(arkham);
 
     this._createPlayer();
@@ -35,7 +32,7 @@ var Game = {
   _drawWholeMap: function(map) {
     for (var x=0; x<this.MAP_WIDTH; x+=1) {
       for (var y=0; y<this.MAP_HEIGHT; y+=1) {
-        this.display.draw(x, y, map._map[y][x]);
+        this.display.draw(x, y, map._map[x][y]);
       }
     }
   }, // end drawWholeMap
