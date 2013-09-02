@@ -3,11 +3,19 @@
 // XXX
 // Clean up this constructor!
 // get rid of those w and h params
-ROT.Map.Arkham = function (width, height, anEmptyMap) {
+ROT.Map.Arkham = function (width, height) {
   var i = 0,
     this_width = width,
     j,
     this_height;
+
+  $.ajax({
+    url: '/map.json',
+    async: false
+  }).done(function(data) {
+    anEmptyMap = data;
+  });
+
   this.WIDTH = width;
   this.HEIGHT = height;
   ROT.Map.call(this, this.WIDTH, this.HEIGHT);
@@ -95,7 +103,6 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
 ROT.Map.Arkham.extend(ROT.Map);
 
 ROT.Map.Arkham.prototype.create = function () {
-  debugger;
   console.log(this.map);
   var s,
     j,

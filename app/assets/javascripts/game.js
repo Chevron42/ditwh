@@ -15,7 +15,7 @@ var Game = {
 
   _generateMap: function() {
 
-    var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT, window.map);
+    var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT);
     arkham.create();
 
     this._drawWholeMap(arkham);
@@ -25,7 +25,6 @@ var Game = {
   },
 
   _drawWholeMap: function(map) {
-    debugger;
     for (var x = 0; x < this.MAP_WIDTH; x += 1) {
       for (var y = 0; y < this.MAP_HEIGHT; y += 1) {
         this.display.draw(x, y, map.map[x][y]);
