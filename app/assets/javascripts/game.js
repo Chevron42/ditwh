@@ -9,8 +9,6 @@ var Game = {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
     document.body.appendChild(this.display.getContainer());
     this._generateMap();
-
-    // debugger;
   },
 
   _generateMap: function() {

@@ -55,15 +55,16 @@ ROT.Map.Arkham = function (width, height) {
   };
 
   // west sector
+  // could I get away with saving only upper left corner, width, and height
+  // for the full sector as well as the maze?
   this.MISKATONIC_U = {
     upperLeft: [9, 0],
     upperRight: [46, 0],
     lowerLeft: [9, 41],
     lowerRight: [46, 41],
-    mazeUpperLeft: [],
-    mazeUpperRight: [],
-    mazeLowerLeft: [],
-    mazeLowerRight: [],
+    mazeUpperLeft: [19, 19],
+    mazeWidth: 27,
+    mazeHeight: 21,
     traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2]
   };
 
@@ -73,10 +74,9 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [130, 0],
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
-    mazeUpperLeft: [],
-    mazeUpperRight: [],
-    mazeLowerLeft: [],
-    mazeLowerRight: [],
+    mazeUpperLeft: [97, 11],
+    mazeWidth: 23,
+    mazeHeight: 21,
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
   };
 
@@ -86,10 +86,9 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 28],
     lowerLeft: [46, 35],
     lowerRight: [96, 35],
-    mazeUpperLeft: [],
-    mazeUpperRight: [],
-    mazeLowerLeft: [],
-    mazeLowerRight: [],
+    mazeUpperLeft: [55, 28],
+    mazeWidth: 52,
+    mazeHeight: 4,
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
   };
 
@@ -99,10 +98,9 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 7],
     lowerLeft: [46, 14],
     lowerRight: [96, 14],
-    mazeUpperLeft: [],
-    mazeUpperRight: [],
-    mazeLowerLeft: [],
-    mazeLowerRight: [],
+    mazeUpperLeft: [46, 29],
+    mazeWidth: 40,
+    mazeHeight: 4,
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
   };
 
@@ -120,6 +118,55 @@ ROT.Map.Arkham = function (width, height) {
 ROT.Map.Arkham.extend(ROT.Map);
 
 ROT.Map.Arkham.prototype.create = function () {
+
+  // we have to create a little submap prototype
+  // in order for the callback to work
+  // (since they're designed to bind this context)
+  var Submap = function(width, height) {
+
+    var myLilMap = [];
+
+    var mazeCallback = function(x, y, value) {
+      var tile;
+      var rand;
+
+      if (value === 0) {
+        tile = new Tile('.');
+        tile.onThePath = true;
+      }
+      else {
+        // give the walls a placeholder value
+        tile = new Tile('~');
+      }
+      this.myLilMap[x][y] = tile;
+    };
+
+    var em = new ROT.Map.EllerMaze(width, height);
+    em.create(mazeCallback.bind(this));
+
+  };
+
+  // takes an Eller Maze and replaces the appropriate
+  // section of the map
+  // XXX
+  // these submap variables are a dirty hack, any way around it...?
+  var replaceSubsection = function(sector, submap) {
+    var theMap = submap.myLilMap;
+
+    var submapI = 0;
+    for (var i = sector.mazeUpperLeft[0]; i < sector.mazeWidth; i += 1) {
+
+      var submapJ = 0;
+      for (var j = sector.mazeUpperLeft[1]; j < sector.mazeHeight; j += 1) {
+        this.map[i][j] = submap[submapI][submapJ];
+        submapJ += 1;
+      }
+
+      submapI += 1;
+    }
+  };
+
+  // okay, here's where all the work gets done
   var s,
     j,
     i,
@@ -135,10 +182,16 @@ ROT.Map.Arkham.prototype.create = function () {
     var aChar;
     var trap = false;
 
-    // first, let's generate some mazes and mark maze
+    // first, let's generate a maze submap for this sector
+    mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
+
+    // then, replace the corresponding section of the map with the maze
+    replaceSubsection(sector, mySubmap);
+
+    // now let's fill in the non-path spaces with dense traps
     for (i = startWidth; i < endWidth; i += 1) {
       for (j = startHeight; j < endHeight; j += 1) {
-        if (this.map[i][j].value !== ' ') {
+        if (this.map[i][j].value !== ' ' && this.map[i][j].onThePath === false) {
 
           rand = ROT.RNG.getUniform();
           if (rand < 0.29) {
@@ -158,7 +211,6 @@ ROT.Map.Arkham.prototype.create = function () {
         }
       }
     }
-
 
   }
 
