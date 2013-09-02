@@ -1,5 +1,8 @@
 //= require rot
 
+// XXX
+// Clean up this constructor!
+// get rid of those w and h params
 ROT.Map.Arkham = function (width, height, anEmptyMap) {
   var i = 0,
     this_width = width,
@@ -8,15 +11,15 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
   this.WIDTH = width;
   this.HEIGHT = height;
   ROT.Map.call(this, this.WIDTH, this.HEIGHT);
-  this._map = [];
+  this.map = [];
 
   // generate an empty map from the given parameter
 
   for (i; i < this_width; i += 1) {
     this_height = this.HEIGHT;
-    this._map[i] = [];
+    this.map[i] = [];
     for (j = 0; j < this_height; j += 1) {
-      this._map[i].push(anEmptyMap[i][j]);
+      this.map[i].push(anEmptyMap[i][j]);
     }
   }
 
@@ -29,7 +32,7 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
     EAST_TRAP_1: '<',
     EAST_TRAP_2: '=',
     SOUTH_TRAP_1: '/',
-    SOUTH_TRAP_2: ':',
+    SOUTH_TRAP_2: '#',
     NORTH_TRAP_1: '\\',
     NORTH_TRAP_2: '*',
     FRANK: 'F',
@@ -42,6 +45,7 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
     BROWN_JENKIN: 'B'
   };
 
+  // west sector
   this.MISKATONIC_U = {
     upperLeft: [9, 0],
     upperRight: [46, 0],
@@ -50,27 +54,30 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
     traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2]
   };
 
+  // east sector
   this.ARKHAM_SQ = {
-    upperLeft: [94, 0],
+    upperLeft: [93, 0],
     upperRight: [130, 0],
-    lowerLeft: [94, 130],
-    lowerRight: [130, 130],
+    lowerLeft: [93, 41],
+    lowerRight: [130, 41],
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
   };
 
-  this.MEADOW_HILL = {
-    upperLeft: [16, 125],
-    upperRight: [92, 125],
-    lowerLeft: [16, 131],
-    lowerRight: [92, 131],
+  // south sector
+  this.FOREST = {
+    upperLeft: [46, 28],
+    upperRight: [93, 28],
+    lowerLeft: [46, 35],
+    lowerRight: [93, 35],
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
   };
 
-  this.FOREST = {
-    upperLeft: [47, 7],
-    upperRight: [92, 7],
-    lowerLeft: [47, 14],
-    lowerRight: [92, 14],
+  // north sector
+  this.MEADOW_HILL = {
+    upperLeft: [46, 7],
+    upperRight: [93, 7],
+    lowerLeft: [46, 14],
+    lowerRight: [93, 14],
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
   };
 
@@ -81,16 +88,20 @@ ROT.Map.Arkham = function (width, height, anEmptyMap) {
     lowerRight: [92, 124]
   };
 
-  this.SECTORS = [this.MISKATONIC_U, this.ARKHAM_SQ, this.MEADOW_HILL, this.FOREST];
-
+  this.SECTORS = [this.MISKATONIC_U, this.ARKHAM_SQ, this.FOREST, this.MEADOW_HILL];
   return this;
 };
 
 ROT.Map.Arkham.extend(ROT.Map);
 
-ROT.Map.Arkham.prototype.create = function() {
-
-  for (var s = 0; s < this.SECTORS.length; s += 1) {
+ROT.Map.Arkham.prototype.create = function () {
+  debugger;
+  console.log(this.map);
+  var s,
+    j,
+    i,
+    sectors_length = this.SECTORS.length;
+  for (s = 0; s < sectors_length; s += 1) {
     var sector = this.SECTORS[s];
     var startWidth = sector.upperLeft[0];
     var endWidth = sector.upperRight[0];
@@ -98,21 +109,26 @@ ROT.Map.Arkham.prototype.create = function() {
     var endHeight = sector.lowerRight[1];
     var rand;
     var tile;
-    for (var i = startWidth; i < endWidth; i += 1) {
-      for (var j = startHeight; j < endHeight; j += 1) {
-        if (this._map[i][j] !== ' ') {
+    for (i = startWidth; i < endWidth; i += 1) {
+      for (j = startHeight; j < endHeight; j += 1) {
+        if (this.map[i][j] !== ' ') {
 
           rand = ROT.RNG.getUniform();
-          if (rand < 0.19) { tile = sector.traps[0]; }
-          else if (rand < 0.39) { tile = sector.traps[1]; }
-          else { tile = this.TILE.SAFE; }
+          if (rand < 0.19) {
+            tile = sector.traps[0];
+          } else if (rand < 0.39) {
+            tile = sector.traps[1];
+          } else { tile = this.TILE.SAFE; }
 
-          this._map[i][j] = tile;
-
+          this.map[i][j] = tile;
+          if (sector === this.FOREST) {
+            console.log('set ' + i + ',' + j + ' to ' + tile);
+          }
         }
       }
     }
   }
 
-  return this._map;
+  console.log(this.map);
+  return this.map;
 };

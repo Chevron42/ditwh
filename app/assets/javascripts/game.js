@@ -16,23 +16,19 @@ var Game = {
   _generateMap: function() {
 
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT, window.map);
-
-    //debugger;
     arkham.create();
+
     this._drawWholeMap(arkham);
 
     this._createPlayer();
 
   },
 
-  arkhamCallback: function(x, y, value) {
-    this.map[i][j] = value;
-  },
-
   _drawWholeMap: function(map) {
-    for (var x=0; x<this.MAP_WIDTH; x+=1) {
-      for (var y=0; y<this.MAP_HEIGHT; y+=1) {
-        this.display.draw(x, y, map._map[x][y]);
+    debugger;
+    for (var x = 0; x < this.MAP_WIDTH; x += 1) {
+      for (var y = 0; y < this.MAP_HEIGHT; y += 1) {
+        this.display.draw(x, y, map.map[x][y]);
       }
     }
   }, // end drawWholeMap

@@ -20,6 +20,11 @@ class WelcomeController < ApplicationController
     end
 
     @map
+
+    respond_to do |format|
+      format.html {}
+      format.json { render json: @map }
+    end
   end
 
 end
