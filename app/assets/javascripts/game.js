@@ -11,13 +11,13 @@ var Game = {
     this._generateMap();
 
     // debugger;
-    // this.engine.start();
   },
 
   _generateMap: function() {
 
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT, window.map);
 
+    //debugger;
     arkham.create();
     this._drawWholeMap(arkham);
 
