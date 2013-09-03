@@ -122,16 +122,15 @@ ROT.Map.Arkham.extend(ROT.Map);
 // XXX
 // these submap variables are a dirty hack, any way around it...?
 ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
-  var submapI = 0;
-  for (var i = sector.mazeUpperLeft[0]; i < sector.mazeWidth; i += 1) {
+  var mapI = sector.mazeUpperLeft[0];
+  var mapJ = sector.mazeUpperLeft[1];
 
-    var submapJ = 0;
-    for (var j = sector.mazeUpperLeft[1]; j < sector.mazeHeight; j += 1) {
-      this.map[i][j] = submap[submapI][submapJ];
-      submapJ += 1;
+  for (var i = 0; i < sector.mazeWidth; i += 1) {
+    for (var j = 0; j < sector.mazeHeight; j += 1) {
+      this.map[mapI][mapJ] = submap[i][j];
+      mapJ += 1;
     }
-
-    submapI += 1;
+    mapI += 1;
   }
 };
 
@@ -191,7 +190,6 @@ ROT.Map.Arkham.prototype.create = function() {
     // first, let's generate a maze submap for this sector
     mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
 
-    debugger;
     // then, replace the corresponding section of the map with the maze
     this.replaceSubsection(sector, mySubmap);
 
