@@ -117,16 +117,42 @@ ROT.Map.Arkham = function (width, height) {
 
 ROT.Map.Arkham.extend(ROT.Map);
 
-ROT.Map.Arkham.prototype.create = function () {
+// takes an Eller Maze and replaces the appropriate
+// section of the map
+// XXX
+// these submap variables are a dirty hack, any way around it...?
+ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
+  var submapI = 0;
+  for (var i = sector.mazeUpperLeft[0]; i < sector.mazeWidth; i += 1) {
+
+    var submapJ = 0;
+    for (var j = sector.mazeUpperLeft[1]; j < sector.mazeHeight; j += 1) {
+      this.map[i][j] = submap[submapI][submapJ];
+      submapJ += 1;
+    }
+
+    submapI += 1;
+  }
+};
+
+ROT.Map.Arkham.prototype.create = function() {
 
   // we have to create a little submap prototype
   // in order for the callback to work
   // (since they're designed to bind this context)
   var Submap = function(width, height) {
 
-    var myLilMap = [];
+    // make the map the size we want it to be
+    this.myLilMap = [];
+    for (var i = 0; i < width; i += 1) {
+      this.myLilMap[i] = [];
+      for (var j = 0; j < height; j += 1) {
+        this.myLilMap[i].push(null);
+      }
+    }
 
-    var mazeCallback = function(x, y, value) {
+    // k, now this callback is gonna fill the map with values
+    this.mazeCallback = function(x, y, value) {
       var tile;
       var rand;
 
@@ -141,29 +167,9 @@ ROT.Map.Arkham.prototype.create = function () {
       this.myLilMap[x][y] = tile;
     };
 
-    var em = new ROT.Map.EllerMaze(width, height);
-    em.create(mazeCallback.bind(this));
+    this.em = new ROT.Map.EllerMaze(width, height);
+    this.em.create(this.mazeCallback.bind(this));
 
-  };
-
-  // takes an Eller Maze and replaces the appropriate
-  // section of the map
-  // XXX
-  // these submap variables are a dirty hack, any way around it...?
-  var replaceSubsection = function(sector, submap) {
-    var theMap = submap.myLilMap;
-
-    var submapI = 0;
-    for (var i = sector.mazeUpperLeft[0]; i < sector.mazeWidth; i += 1) {
-
-      var submapJ = 0;
-      for (var j = sector.mazeUpperLeft[1]; j < sector.mazeHeight; j += 1) {
-        this.map[i][j] = submap[submapI][submapJ];
-        submapJ += 1;
-      }
-
-      submapI += 1;
-    }
   };
 
   // okay, here's where all the work gets done
@@ -185,34 +191,37 @@ ROT.Map.Arkham.prototype.create = function () {
     // first, let's generate a maze submap for this sector
     mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
 
+    debugger;
     // then, replace the corresponding section of the map with the maze
-    replaceSubsection(sector, mySubmap);
+    this.replaceSubsection(sector, mySubmap);
 
     // now let's fill in the non-path spaces with dense traps
-    for (i = startWidth; i < endWidth; i += 1) {
-      for (j = startHeight; j < endHeight; j += 1) {
-        if (this.map[i][j].value !== ' ' && this.map[i][j].onThePath === false) {
+    // for (i = startWidth; i < endWidth; i += 1) {
+    //   for (j = startHeight; j < endHeight; j += 1) {
+    //     if (this.map[i][j].value !== ' ' && this.map[i][j].onThePath === false) {
 
-          rand = ROT.RNG.getUniform();
-          if (rand < 0.29) {
-            aChar = sector.traps[0];
-            trap = true;
-          }
-          else if (rand < 0.59) {
-            aChar = sector.traps[1];
-            trap = true;
-          }
-          else {
-            aChar = this.TILE.SAFE;
-          }
+    //       rand = ROT.RNG.getUniform();
+    //       if (rand < 0.29) {
+    //         aChar = sector.traps[0];
+    //         trap = true;
+    //       }
+    //       else if (rand < 0.59) {
+    //         aChar = sector.traps[1];
+    //         trap = true;
+    //       }
+    //       else {
+    //         aChar = this.TILE.SAFE;
+    //       }
 
-          this.map[i][j].value = aChar;
-          this.map[i][j].isTrap = trap;
-        }
-      }
-    }
+    //       this.map[i][j].value = aChar;
+    //       this.map[i][j].isTrap = trap;
+    //     }
+    //   }
+    // }
 
   }
 
   return this.map;
 };
+
+
