@@ -1,4 +1,12 @@
-var map = new ROT.Map.Arkham(141, 41);
+var emptyMap = [];
+
+jQuery.get('http://localhost/index.html', function(data) {
+  alert(data);
+  emptyMap = data;
+});
+
+
+var map = new ROT.Map.Arkham(141, 41, emptyMap);
 
 describe("a map of Arkham", function() {
 
@@ -7,19 +15,19 @@ describe("a map of Arkham", function() {
     expect(map._height).toEqual(41);
   });
 
-  it("has a path to the eastern tower", function() {
+  it("always has a path to the eastern tower", function() {
 
   });
 
-  it("has a path to the western tower", function() {
+  it("always has a path to the western tower", function() {
 
   });
 
-  it("has a path to the southern tower", function() {
+  it("always has a path to the southern tower", function() {
 
   });
 
-  it("has a path to the northern tower", function() {
+  it("always has a path to the northern tower", function() {
 
   });
 

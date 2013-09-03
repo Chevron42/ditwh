@@ -1,19 +1,14 @@
 //= require rot
 //= require_ tree .
 
-var Player = function(x, y) {
-    this._x = x;
-    this._y = y;
+var Player = function(pos) {
+    this._x = pos[0];
+    this._y = pos[1];
     this._draw();
 };
 
 Player.prototype._draw = function() {
   Game.display.draw(this._x, this._y, "@", "#fff");
-};
-
-Player.prototype.act = function() {
-  Game.engine.lock();
-  window.addEventListener("keydown", this);
 };
 
 Player.prototype.handleEvent = function(e) {

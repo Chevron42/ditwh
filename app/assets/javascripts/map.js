@@ -1,4 +1,5 @@
 //= require rot
+//= require submap
 
 // XXX
 // Clean up this constructor!
@@ -93,9 +94,9 @@ ROT.Map.Arkham = function (width, height) {
   this.FOREST = {
     name: 'Forest',
     upperLeft: [46, 27],
-    upperRight: [96, 27],
+    upperRight: [97, 27],
     lowerLeft: [46, 34],
-    lowerRight: [96, 34],
+    lowerRight: [97, 34],
     mazeUpperLeft: [48, 28],
     mazeWidth: 44,
     mazeHeight: 5,
@@ -108,15 +109,15 @@ ROT.Map.Arkham = function (width, height) {
   this.MEADOW_HILL = {
     name: 'Meadow Hill',
     upperLeft: [46, 7],
-    upperRight: [96, 7],
-    lowerLeft: [46, 14],
-    lowerRight: [96, 14],
-    mazeUpperLeft: [46, 8],
-    mazeWidth: 52,
-    mazeHeight: 7,
+    upperRight: [97, 7],
+    lowerLeft: [46, 15],
+    lowerRight: [97, 15],
+    mazeUpperLeft: [46, 9],
+    mazeWidth: 45,
+    mazeHeight: 6,
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
-    horizontalEndPath: [[53, 8], [99, 8]],
-    verticalEndPath: [[70, 6], [70, 7]]
+    horizontalEndPath: [[53, 7], [99, 7]],
+    verticalEndPath: [[70, 7], [70, 8]]
   };
 
   this.CENTER = {
@@ -161,65 +162,6 @@ ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
 
 ROT.Map.Arkham.prototype.create = function() {
 
-  // we have to create a little submap prototype
-  // in order for the callback to work
-  // (since they're designed to bind this context
-  var Submap = function(aWidth, aHeight) {
-    // we need to add 2 because the Eller Maze
-    // adds an outer boundary of walls
-    // and we don't need that
-    this.width = aWidth + 2;
-    this.height = aHeight + 2;
-
-    // make the map the size we want it to be
-    this.myLilMap = [];
-    for (var i = 0; i < this.width; i += 1) {
-      this.myLilMap[i] = [];
-      for (var j = 0; j < this.height; j += 1) {
-        this.myLilMap[i].push(null);
-      }
-    }
-
-    // k, so this callback is gonna fill the map with values
-    // from the Eller Maze
-    this.mazeCallback = function(x, y, value) {
-      var tile;
-      var rand;
-
-      if (value === 0) {
-        tile = new Tile('.');
-        tile.onThePath = true;
-      }
-      else {
-        // give the walls a placeholder value
-        tile = new Tile('~');
-        tile.isTrap = true;
-      }
-      this.myLilMap[x][y] = tile;
-    };
-
-    // now we need to get rid of those outer walls from the Eller Maze generator
-    this.shaveWalls = function() {
-      // take off the right-hand wall
-      this.myLilMap.pop();
-
-      // take off the left-hand wall
-      this.myLilMap.splice(0, 1);
-
-      // take off the bottom and top walls
-      for (var i = 0; i < aWidth; i += 1) {
-        this.myLilMap[i].pop();
-        this.myLilMap[i].splice(0, 1);
-      }
-
-    };
-
-    this.em = new ROT.Map.EllerMaze(this.width, this.height);
-    this.em.create(this.mazeCallback.bind(this));
-    this.shaveWalls();
-
-  };
-
   // okay, here's where all the work gets done
   var s,
     j,
@@ -237,7 +179,7 @@ ROT.Map.Arkham.prototype.create = function() {
     var trap = false;
 
     // first, let's generate a maze submap for this sector
-    mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
+    var mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
 
     // then, replace the corresponding section of the map with the maze
     this.replaceSubsection(sector, mySubmap);
@@ -257,7 +199,7 @@ ROT.Map.Arkham.prototype.create = function() {
             aChar = sector.traps[0];
             trap = true;
           }
-          else if (rand < 0.69) {
+          else if (rand < 0.79) {
             aChar = sector.traps[1];
             trap = true;
           }
@@ -271,7 +213,28 @@ ROT.Map.Arkham.prototype.create = function() {
       }
     }
 
+  } // end sector generation
+
+  // finally, we have to mark what tiles are initially visible
+  for (var x = 1; x < this.WIDTH - 1; x += 1) {
+    for (var y = 1; y < this.HEIGHT - 1; y += 1) {
+      var outerWall = false;
+      if (this.map[x + 1][y].value === ' ') { outerWall = true; }
+      else if (this.map[x][y + 1].value === ' ') { outerWall = true; }
+      else if (this.map[x - 1][y].value === ' ') { outerWall = true; }
+      else if (this.map[x][y - 1].value === ' ') { outerWall = true; }
+
+      if (outerWall) {
+        this.map[x][y].visible = true;
+      }
+    }
   }
+
+  // mark the four towers as visible
+  this.map[70][0].visible = true;
+  this.map[0][20].visible = true;
+  this.map[71][40].visible = true;
+  this.map[140][20].visible = true;
 
   return this.map;
 };
