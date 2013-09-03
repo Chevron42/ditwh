@@ -62,10 +62,15 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [46, 0],
     lowerLeft: [9, 41],
     lowerRight: [46, 41],
-    mazeUpperLeft: [19, 19],
+    mazeUpperLeft: [19, 10],
     mazeWidth: 27,
     mazeHeight: 21,
-    traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2]
+    traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2],
+    // the following two variables specify lines of the map
+    // that need to be clear to guarantee that this sector
+    // will have a path to its tower
+    pathEndHorizontal: [[1, 21], [18, 21]],
+    pathEndVertical: [[18, 10], [18, 41]]
   };
 
   // east sector
@@ -74,10 +79,12 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [130, 0],
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
-    mazeUpperLeft: [97, 11],
+    mazeUpperLeft: [97, 10],
     mazeWidth: 23,
     mazeHeight: 21,
-    traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
+    traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2],
+    pathEndHorizontal: 20,
+    pathEndVertical: 131
   };
 
   // south sector
@@ -86,10 +93,12 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 28],
     lowerLeft: [46, 35],
     lowerRight: [96, 35],
-    mazeUpperLeft: [55, 28],
+    mazeUpperLeft: [46, 27],
     mazeWidth: 52,
-    mazeHeight: 4,
-    traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
+    mazeHeight: 7,
+    traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2],
+    pathEndHorizontal: 35,
+    pathEndVertical: 21
   };
 
   // north sector
@@ -98,10 +107,12 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [96, 7],
     lowerLeft: [46, 14],
     lowerRight: [96, 14],
-    mazeUpperLeft: [46, 29],
-    mazeWidth: 40,
-    mazeHeight: 4,
-    traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
+    mazeUpperLeft: [46, 8],
+    mazeWidth: 52,
+    mazeHeight: 7,
+    traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
+    pathEndHorizontal: 7,
+    pathEndVertical: 21
   };
 
   this.CENTER = {
@@ -117,40 +128,54 @@ ROT.Map.Arkham = function (width, height) {
 
 ROT.Map.Arkham.extend(ROT.Map);
 
-// takes an Eller Maze and replaces the appropriate
-// section of the map
-// XXX
-// these submap variables are a dirty hack, any way around it...?
+// takes an Eller Maze and replaces the appropriate sector of the map
 ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
-  var mapI = sector.mazeUpperLeft[0];
-  var mapJ = sector.mazeUpperLeft[1];
+  var plusWidth = sector.mazeUpperLeft[0];
+  var plusHeight = sector.mazeUpperLeft[1];
 
   for (var i = 0; i < sector.mazeWidth; i += 1) {
     for (var j = 0; j < sector.mazeHeight; j += 1) {
-      this.map[mapI][mapJ] = submap[i][j];
-      mapJ += 1;
+      this.map[i + plusWidth][j + plusHeight] = submap[i][j];
     }
-    mapI += 1;
   }
+};
+
+ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
+
+  // make the necessary horizontal path
+  var pathLeftEnd = sector.upperLeft[0];
+  var sectorWidth = sector.upperRight[0] - pathLeftEnd[0];
+  for (var i = pathLeftEnd; i < this.sectorWidth; i += 1) {
+    this.map[i][sector.pathEndHorizontal].onThePath = true;
+  }
+
+  // make the necessary vertical path
+  for (var j = 0; j < this.)
 };
 
 ROT.Map.Arkham.prototype.create = function() {
 
   // we have to create a little submap prototype
   // in order for the callback to work
-  // (since they're designed to bind this context)
-  var Submap = function(width, height) {
+  // (since they're designed to bind this context
+  var Submap = function(aWidth, aHeight) {
+    // we need to add 2 because the Eller Maze
+    // adds an outer boundary of walls
+    // and we don't need that
+    this.width = aWidth + 2;
+    this.height = aHeight + 2;
 
     // make the map the size we want it to be
     this.myLilMap = [];
-    for (var i = 0; i < width; i += 1) {
+    for (var i = 0; i < this.width; i += 1) {
       this.myLilMap[i] = [];
-      for (var j = 0; j < height; j += 1) {
+      for (var j = 0; j < this.height; j += 1) {
         this.myLilMap[i].push(null);
       }
     }
 
-    // k, now this callback is gonna fill the map with values
+    // k, so this callback is gonna fill the map with values
+    // from the Eller Maze
     this.mazeCallback = function(x, y, value) {
       var tile;
       var rand;
@@ -162,12 +187,30 @@ ROT.Map.Arkham.prototype.create = function() {
       else {
         // give the walls a placeholder value
         tile = new Tile('~');
+        tile.trap = true;
       }
       this.myLilMap[x][y] = tile;
     };
 
-    this.em = new ROT.Map.EllerMaze(width, height);
+    // now we need to get rid of those outer walls from the Eller Maze generator
+    this.shaveWalls = function() {
+      // take off the right-hand wall
+      this.myLilMap.pop();
+
+      // take off the left-hand wall
+      this.myLilMap.splice(0, 1);
+
+      // take off the bottom and top walls
+      for (var i = 0; i < aWidth; i += 1) {
+        this.myLilMap[i].pop();
+        this.myLilMap[i].splice(0, 1);
+      }
+
+    };
+
+    this.em = new ROT.Map.EllerMaze(this.width, this.height);
     this.em.create(this.mazeCallback.bind(this));
+    this.shaveWalls();
 
   };
 
@@ -193,17 +236,22 @@ ROT.Map.Arkham.prototype.create = function() {
     // then, replace the corresponding section of the map with the maze
     this.replaceSubsection(sector, mySubmap);
 
+    // great! now that we've got some mazes, it's time to tend to those
+    // odd tendrils at the four corners of the map.
+    // let's make some guaranteed paths from each maze to each tower
+    this.makePathEnds(sector);
+
     // now let's fill in the non-path spaces with dense traps
     // for (i = startWidth; i < endWidth; i += 1) {
     //   for (j = startHeight; j < endHeight; j += 1) {
     //     if (this.map[i][j].value !== ' ' && this.map[i][j].onThePath === false) {
 
     //       rand = ROT.RNG.getUniform();
-    //       if (rand < 0.29) {
+    //       if (rand < 0.39) {
     //         aChar = sector.traps[0];
     //         trap = true;
     //       }
-    //       else if (rand < 0.59) {
+    //       else if (rand < 0.69) {
     //         aChar = sector.traps[1];
     //         trap = true;
     //       }
