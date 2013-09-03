@@ -58,6 +58,7 @@ ROT.Map.Arkham = function (width, height) {
   // could I get away with saving only upper left corner, width, and height
   // for the full sector as well as the maze?
   this.MISKATONIC_U = {
+    name: 'Miskatonic University',
     upperLeft: [9, 0],
     upperRight: [46, 0],
     lowerLeft: [9, 41],
@@ -69,40 +70,43 @@ ROT.Map.Arkham = function (width, height) {
     // the following two variables specify lines of the map
     // that need to be clear to guarantee that this sector
     // will have a path to its tower
-    pathEndHorizontal: [[1, 21], [18, 21]],
-    pathEndVertical: [[18, 10], [18, 41]]
+    horizontalEndPath: [[1, 20], [18, 20]],
+    verticalEndPath: [[18, 10], [18, 41]]
   };
 
   // east sector
   this.ARKHAM_SQ = {
+    name: 'Arkham Town Square',
     upperLeft: [97, 0],
     upperRight: [130, 0],
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
     mazeUpperLeft: [97, 10],
-    mazeWidth: 23,
+    mazeWidth: 24,
     mazeHeight: 21,
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2],
-    pathEndHorizontal: 20,
-    pathEndVertical: 131
+    horizontalEndPath: [[121, 20], [139, 20]],
+    verticalEndPath: [[121, 14], [121, 30]]
   };
 
   // south sector
   this.FOREST = {
-    upperLeft: [46, 28],
-    upperRight: [96, 28],
-    lowerLeft: [46, 35],
-    lowerRight: [96, 35],
-    mazeUpperLeft: [46, 27],
-    mazeWidth: 52,
-    mazeHeight: 7,
+    name: 'Forest',
+    upperLeft: [46, 27],
+    upperRight: [96, 27],
+    lowerLeft: [46, 34],
+    lowerRight: [96, 34],
+    mazeUpperLeft: [48, 28],
+    mazeWidth: 44,
+    mazeHeight: 5,
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2],
-    pathEndHorizontal: 35,
-    pathEndVertical: 21
+    horizontalEndPath: [[50, 33], [94, 33]],
+    verticalEndPath: [[70, 32], [70, 33]]
   };
 
   // north sector
   this.MEADOW_HILL = {
+    name: 'Meadow Hill',
     upperLeft: [46, 7],
     upperRight: [96, 7],
     lowerLeft: [46, 14],
@@ -111,8 +115,8 @@ ROT.Map.Arkham = function (width, height) {
     mazeWidth: 52,
     mazeHeight: 7,
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
-    pathEndHorizontal: 7,
-    pathEndVertical: 21
+    horizontalEndPath: [[53, 8], [99, 8]],
+    verticalEndPath: [[70, 6], [70, 7]]
   };
 
   this.CENTER = {
@@ -140,17 +144,19 @@ ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
   }
 };
 
+// XXX
+// Clean this up
 ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
 
   // make the necessary horizontal path
-  var pathLeftEnd = sector.upperLeft[0];
-  var sectorWidth = sector.upperRight[0] - pathLeftEnd[0];
-  for (var i = pathLeftEnd; i < this.sectorWidth; i += 1) {
-    this.map[i][sector.pathEndHorizontal].onThePath = true;
+  for (var i = sector.horizontalEndPath[0][0]; i < sector.horizontalEndPath[1][0]; i += 1) {
+    this.map[i][sector.horizontalEndPath[0][1]].onThePath = true;
   }
 
   // make the necessary vertical path
-  for (var j = 0; j < this.)
+  for (var j = sector.verticalEndPath[0][1]; j < sector.verticalEndPath[1][1]; j += 1) {
+    this.map[sector.verticalEndPath[0][0]][j].onThePath = true;
+  }
 };
 
 ROT.Map.Arkham.prototype.create = function() {
@@ -187,7 +193,7 @@ ROT.Map.Arkham.prototype.create = function() {
       else {
         // give the walls a placeholder value
         tile = new Tile('~');
-        tile.trap = true;
+        tile.isTrap = true;
       }
       this.myLilMap[x][y] = tile;
     };
@@ -242,32 +248,30 @@ ROT.Map.Arkham.prototype.create = function() {
     this.makePathEnds(sector);
 
     // now let's fill in the non-path spaces with dense traps
-    // for (i = startWidth; i < endWidth; i += 1) {
-    //   for (j = startHeight; j < endHeight; j += 1) {
-    //     if (this.map[i][j].value !== ' ' && this.map[i][j].onThePath === false) {
+    for (i = startWidth; i < endWidth; i += 1) {
+      for (j = startHeight; j < endHeight; j += 1) {
+        if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
 
-    //       rand = ROT.RNG.getUniform();
-    //       if (rand < 0.39) {
-    //         aChar = sector.traps[0];
-    //         trap = true;
-    //       }
-    //       else if (rand < 0.69) {
-    //         aChar = sector.traps[1];
-    //         trap = true;
-    //       }
-    //       else {
-    //         aChar = this.TILE.SAFE;
-    //       }
+          rand = ROT.RNG.getUniform();
+          if (rand < 0.39) {
+            aChar = sector.traps[0];
+            trap = true;
+          }
+          else if (rand < 0.69) {
+            aChar = sector.traps[1];
+            trap = true;
+          }
+          else {
+            aChar = this.TILE.SAFE;
+          }
 
-    //       this.map[i][j].value = aChar;
-    //       this.map[i][j].isTrap = trap;
-    //     }
-    //   }
-    // }
+          this.map[i][j].value = aChar;
+          this.map[i][j].isTrap = trap;
+        }
+      }
+    }
 
   }
 
   return this.map;
 };
-
-

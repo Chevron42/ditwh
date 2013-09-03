@@ -32,7 +32,7 @@ var Game = {
 
   _createPlayer: function() {
     // MAKE THESE PARAMS DYNAMIC
-    this.player = new Player(71, 21);
+    this.player = new Player(71, 20);
   }
 
 };
