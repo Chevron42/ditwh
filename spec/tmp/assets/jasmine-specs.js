@@ -4732,17 +4732,76 @@ ROT.Path.AStar.prototype._distance = function(x, y) {
 	}
 }
 ;
+// we have to create a little submap prototype
+// in order for the callback to work
+// (since they're designed to bind this context
+
+var Submap = function(aWidth, aHeight) {
+  // we need to add 2 because the Eller Maze
+  // adds an outer boundary of walls
+  // and we don't need that
+  this.width = aWidth + 2;
+  this.height = aHeight + 2;
+
+  // make the submap the size we want it to be
+  this.myLilMap = [];
+  for (var i = 0; i < this.width; i += 1) {
+    this.myLilMap[i] = [];
+    for (var j = 0; j < this.height; j += 1) {
+      this.myLilMap[i].push(null);
+    }
+  }
+
+  // k, so this callback is gonna fill the map with values
+  // from the Eller Maze
+  this.mazeCallback = function(x, y, value) {
+    var tile;
+    var rand;
+
+    if (value === 0) {
+      tile = new Tile('.');
+      tile.onThePath = true;
+    }
+    else {
+      // give the walls a placeholder value
+      tile = new Tile('~');
+      tile.isTrap = true;
+    }
+    this.myLilMap[x][y] = tile;
+  };
+
+  // now we need to get rid of those outer walls from the Eller Maze generator
+  this.shaveWalls = function() {
+    // take off the right-hand wall
+    this.myLilMap.pop();
+
+    // take off the left-hand wall
+    this.myLilMap.splice(0, 1);
+
+    // take off the bottom and top walls
+    for (var i = 0; i < aWidth; i += 1) {
+      this.myLilMap[i].pop();
+      this.myLilMap[i].splice(0, 1);
+    }
+
+  };
+
+  this.em = new ROT.Map.EllerMaze(this.width, this.height);
+  this.em.create(this.mazeCallback.bind(this));
+  this.shaveWalls();
+
+};
+
 
 
 // XXX
 // Clean up this constructor!
 // get rid of those w and h params
 ROT.Map.Arkham = function (width, height) {
-  var i = 0,
-    this_width = width,
-    j,
-    this_height,
-    anEmptyMap;
+  this.WIDTH = width;
+  this.HEIGHT = height;
+  this.map = [];
+  this.anEmptyMap = null;
 
   $.ajax({
     url: '/map.json',
@@ -4751,18 +4810,14 @@ ROT.Map.Arkham = function (width, height) {
     anEmptyMap = data;
   });
 
-  this.WIDTH = width;
-  this.HEIGHT = height;
   ROT.Map.call(this, this.WIDTH, this.HEIGHT);
-  this.map = [];
 
-  // generate an empty map from the given parameter
-
-  for (i; i < this_width; i += 1) {
+  // create a map of Tile objects using the empty map as a template
+  for (var i; i < this.WIDTH; i += 1) {
     this_height = this.HEIGHT;
     this.map[i] = [];
-    for (j = 0; j < this_height; j += 1) {
-      this.map[i].push(anEmptyMap[i][j]);
+    for (var j = 0; j < this_height; j += 1) {
+      this.map[i].push(new Tile(anEmptyMap[i][j]));
     }
   }
 
@@ -4789,39 +4844,68 @@ ROT.Map.Arkham = function (width, height) {
   };
 
   // west sector
+  // could I get away with saving only upper left corner, width, and height
+  // for the full sector as well as the maze?
   this.MISKATONIC_U = {
+    name: 'Miskatonic University',
     upperLeft: [9, 0],
     upperRight: [46, 0],
     lowerLeft: [9, 41],
     lowerRight: [46, 41],
-    traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2]
+    mazeUpperLeft: [19, 10],
+    mazeWidth: 27,
+    mazeHeight: 21,
+    traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2],
+    // the following two variables specify lines of the map
+    // that need to be clear to guarantee that this sector
+    // will have a path to its tower
+    horizontalEndPath: [[1, 20], [18, 20]],
+    verticalEndPath: [[18, 10], [18, 41]]
   };
 
   // east sector
   this.ARKHAM_SQ = {
+    name: 'Arkham Town Square',
     upperLeft: [97, 0],
     upperRight: [130, 0],
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
-    traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2]
+    mazeUpperLeft: [97, 10],
+    mazeWidth: 24,
+    mazeHeight: 21,
+    traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2],
+    horizontalEndPath: [[121, 20], [139, 20]],
+    verticalEndPath: [[121, 14], [121, 30]]
   };
 
   // south sector
   this.FOREST = {
-    upperLeft: [46, 28],
-    upperRight: [96, 28],
-    lowerLeft: [46, 35],
-    lowerRight: [96, 35],
-    traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2]
+    name: 'Forest',
+    upperLeft: [46, 27],
+    upperRight: [97, 27],
+    lowerLeft: [46, 34],
+    lowerRight: [97, 34],
+    mazeUpperLeft: [48, 28],
+    mazeWidth: 44,
+    mazeHeight: 5,
+    traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2],
+    horizontalEndPath: [[50, 33], [94, 33]],
+    verticalEndPath: [[70, 32], [70, 33]]
   };
 
   // north sector
   this.MEADOW_HILL = {
+    name: 'Meadow Hill',
     upperLeft: [46, 7],
-    upperRight: [96, 7],
-    lowerLeft: [46, 14],
-    lowerRight: [96, 14],
-    traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2]
+    upperRight: [97, 7],
+    lowerLeft: [46, 15],
+    lowerRight: [97, 15],
+    mazeUpperLeft: [46, 9],
+    mazeWidth: 45,
+    mazeHeight: 6,
+    traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
+    horizontalEndPath: [[53, 7], [99, 7]],
+    verticalEndPath: [[70, 7], [70, 8]]
   };
 
   this.CENTER = {
@@ -4837,7 +4921,36 @@ ROT.Map.Arkham = function (width, height) {
 
 ROT.Map.Arkham.extend(ROT.Map);
 
-ROT.Map.Arkham.prototype.create = function () {
+// takes an Eller Maze and replaces the appropriate sector of the map
+ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
+  var plusWidth = sector.mazeUpperLeft[0];
+  var plusHeight = sector.mazeUpperLeft[1];
+
+  for (var i = 0; i < sector.mazeWidth; i += 1) {
+    for (var j = 0; j < sector.mazeHeight; j += 1) {
+      this.map[i + plusWidth][j + plusHeight] = submap[i][j];
+    }
+  }
+};
+
+// XXX
+// Clean this up
+ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
+
+  // make the necessary horizontal path
+  for (var i = sector.horizontalEndPath[0][0]; i < sector.horizontalEndPath[1][0]; i += 1) {
+    this.map[i][sector.horizontalEndPath[0][1]].onThePath = true;
+  }
+
+  // make the necessary vertical path
+  for (var j = sector.verticalEndPath[0][1]; j < sector.verticalEndPath[1][1]; j += 1) {
+    this.map[sector.verticalEndPath[0][0]][j].onThePath = true;
+  }
+};
+
+ROT.Map.Arkham.prototype.create = function() {
+
+  // okay, here's where all the work gets done
   var s,
     j,
     i,
@@ -4848,24 +4961,68 @@ ROT.Map.Arkham.prototype.create = function () {
     var endWidth = sector.upperRight[0];
     var startHeight = sector.upperLeft[1];
     var endHeight = sector.lowerRight[1];
+
     var rand;
-    var tile;
+    var aChar;
+    var trap = false;
+
+    // first, let's generate a maze submap for this sector
+    var mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
+
+    // then, replace the corresponding section of the map with the maze
+    this.replaceSubsection(sector, mySubmap);
+
+    // great! now that we've got some mazes, it's time to tend to those
+    // odd tendrils at the four corners of the map.
+    // let's make some guaranteed paths from each maze to each tower
+    this.makePathEnds(sector);
+
+    // now let's fill in the non-path spaces with dense traps
     for (i = startWidth; i < endWidth; i += 1) {
       for (j = startHeight; j < endHeight; j += 1) {
-        if (this.map[i][j] !== ' ') {
+        if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
 
           rand = ROT.RNG.getUniform();
-          if (rand < 0.29) {
-            tile = sector.traps[0];
-          } else if (rand < 0.59) {
-            tile = sector.traps[1];
-          } else { tile = this.TILE.SAFE; }
+          if (rand < 0.39) {
+            aChar = sector.traps[0];
+            trap = true;
+          }
+          else if (rand < 0.79) {
+            aChar = sector.traps[1];
+            trap = true;
+          }
+          else {
+            aChar = this.TILE.SAFE;
+          }
 
-          this.map[i][j] = tile;
+          this.map[i][j].value = aChar;
+          this.map[i][j].isTrap = trap;
         }
       }
     }
+
+  } // end sector generation
+
+  // finally, we have to mark what tiles are initially visible
+  for (var x = 1; x < this.WIDTH - 1; x += 1) {
+    for (var y = 1; y < this.HEIGHT - 1; y += 1) {
+      var outerWall = false;
+      if (this.map[x + 1][y].value === ' ') { outerWall = true; }
+      else if (this.map[x][y + 1].value === ' ') { outerWall = true; }
+      else if (this.map[x - 1][y].value === ' ') { outerWall = true; }
+      else if (this.map[x][y - 1].value === ' ') { outerWall = true; }
+
+      if (outerWall) {
+        this.map[x][y].visible = true;
+      }
+    }
   }
+
+  // mark the four towers as visible
+  this.map[70][0].visible = true;
+  this.map[0][20].visible = true;
+  this.map[71][40].visible = true;
+  this.map[140][20].visible = true;
 
   return this.map;
 };
@@ -4874,14 +5031,31 @@ var Game = {
   map: [],
   MAP_WIDTH: 141,
   MAP_HEIGHT: 41,
-  player: null,
+  currPos: [71, 21], // initial player position
 
   init: function() {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
     document.body.appendChild(this.display.getContainer());
     this._generateMap();
 
-    // debugger;
+    $(window).keydown(function(event) {
+      var key = event.which;
+      if (key === 38) {
+        // up
+      }
+      else if (key === 40) {
+        // down
+        console.log('down');
+      }
+      else if (key === 37) {
+        // left
+        console.log('left');
+      }
+      else if (key === 39) {
+        // right
+        console.log('right');
+      }
+    });
   },
 
   _generateMap: function() {
@@ -4889,25 +5063,54 @@ var Game = {
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT);
     arkham.create();
 
-    this._drawWholeMap(arkham);
+    // this._drawWholeMap(arkham);
+    this._drawVisibleMap(arkham);
 
-    this._createPlayer();
+    this._drawPlayer(this.currPos);
 
   },
 
   _drawWholeMap: function(map) {
-    for (var x = 0; x < this.MAP_WIDTH; x += 1) {
-      for (var y = 0; y < this.MAP_HEIGHT; y += 1) {
-        this.display.draw(x, y, map.map[x][y]);
+    for (var x = 0; x < map.WIDTH; x += 1) {
+      for (var y = 0; y < map.HEIGHT; y += 1) {
+        this.display.draw(x, y, map.map[x][y].value);
       }
     }
-  }, // end drawWholeMap
+  },
 
-  _createPlayer: function() {
-    // MAKE THESE PARAMS DYNAMIC
-    this.player = new Player(71, 21);
+  _drawVisibleMap: function(map) {
+    for (var x = 0; x < map.WIDTH; x += 1) {
+      for (var y = 0; y < map.HEIGHT; y += 1) {
+        if (map.map[x][y].visible) {
+          this.display.draw(x, y, map.map[x][y].value);
+        }
+      }
+    }
+  },
+
+  _drawPlayer: function(pos) {
+    this.display.draw(pos[0], pos[1], '@');
+  },
+
+  _moveNorth: function() {
+
+  },
+
+  _moveSouth: function() {
+
+  },
+
+  _moveWest: function() {
+
+  },
+
+  _moveEast: function() {
+
+  },
+
+  move: function() {
+
   }
-
 };
 /*!
  * jQuery JavaScript Library v1.10.2
@@ -15096,19 +15299,14 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 //= require_ tree .
 
-var Player = function(x, y) {
-    this._x = x;
-    this._y = y;
+var Player = function(pos) {
+    this._x = pos[0];
+    this._y = pos[1];
     this._draw();
 };
 
 Player.prototype._draw = function() {
   Game.display.draw(this._x, this._y, "@", "#fff");
-};
-
-Player.prototype.act = function() {
-  Game.engine.lock();
-  window.addEventListener("keydown", this);
 };
 
 Player.prototype.handleEvent = function(e) {
@@ -15136,6 +15334,16 @@ Player.prototype.handleEvent = function(e) {
 
     window.removeEventListener("keydown", this);
     Game.engine.unlock();
+};
+var Tile = function(aValue) {
+
+  this.value = aValue;
+  this.hasScene = (this.value === ' ' || this.value === '.') ? false : true;
+  this.visible = false;
+  this.onThePath = false;
+  this.isTrap = false;
+  this.scene = null;
+
 };
 // This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
@@ -15412,7 +15620,50 @@ afterEach(function() {
   jasmine.getFixtures().cleanUp();
   jasmine.JQuery.events.cleanUp();
 });
-var map = new ROT.Map.Arkham(141, 41);
+var game = Game.init();
+
+describe ("a game's", function() {
+
+  describe ("moveNorth function", function() {
+
+    it ("moves the player up one tile if north tile is free", function() {
+      this.game.currPos = [71, 21];
+      var e = jQuery.Event("keydown");
+      e.which = 38;
+      $(window).trigger(e);
+      expect(this.game.currPos).toBe([71, 20]);
+    });
+
+    it ("does not move the player if the north tile is a wall", function() {
+      this.game.currPos = [34, 6];
+      var e = jQuery.Event("keydown");
+      e.which = 38;
+      $(window).trigger(e);
+      expect(this.game.currPos).toBe([34, 6]);
+    });
+
+  });
+
+  describe ("moveSouth function", function() {
+
+  });
+
+  describe ("moveWest function", function() {
+
+  });
+
+  describe ("moveEast function", function() {
+
+  });
+
+});
+var emptyMap = [];
+
+jQuery.get('http://localhost/index.html', function(data) {
+  emptyMap = data;
+});
+
+var map = new ROT.Map.Arkham(141, 41, emptyMap);
 
 describe("a map of Arkham", function() {
 
@@ -15421,19 +15672,19 @@ describe("a map of Arkham", function() {
     expect(map._height).toEqual(41);
   });
 
-  it("has a path to the eastern tower", function() {
+  it("always has a path to the eastern tower", function() {
 
   });
 
-  it("has a path to the western tower", function() {
+  it("always has a path to the western tower", function() {
 
   });
 
-  it("has a path to the southern tower", function() {
+  it("always has a path to the southern tower", function() {
 
   });
 
-  it("has a path to the northern tower", function() {
+  it("always has a path to the northern tower", function() {
 
   });
 

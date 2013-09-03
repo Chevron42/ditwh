@@ -1,10 +1,8 @@
 var emptyMap = [];
 
 jQuery.get('http://localhost/index.html', function(data) {
-  alert(data);
   emptyMap = data;
 });
-
 
 var map = new ROT.Map.Arkham(141, 41, emptyMap);
 

@@ -5,12 +5,11 @@
 // Clean up this constructor!
 // get rid of those w and h params
 ROT.Map.Arkham = function (width, height) {
-  var i = 0,
-    this_width = width,
-    j,
-    this_height,
-    anEmptyMap;
+  this.WIDTH = width;
+  this.HEIGHT = height;
+  ROT.Map.call(this, this.WIDTH, this.HEIGHT);
 
+  this.anEmptyMap = null;
   $.ajax({
     url: '/map.json',
     async: false
@@ -18,17 +17,13 @@ ROT.Map.Arkham = function (width, height) {
     anEmptyMap = data;
   });
 
-  this.WIDTH = width;
-  this.HEIGHT = height;
-  ROT.Map.call(this, this.WIDTH, this.HEIGHT);
   this.map = [];
 
-  // generate an empty map from the given parameter
-
-  for (i; i < this_width; i += 1) {
+  // create a map of Tile objects using the empty map as a template
+  for (var i = 0; i < this.WIDTH; i += 1) {
     this_height = this.HEIGHT;
     this.map[i] = [];
-    for (j = 0; j < this_height; j += 1) {
+    for (var j = 0; j < this_height; j += 1) {
       this.map[i].push(new Tile(anEmptyMap[i][j]));
     }
   }

@@ -14,7 +14,6 @@ var Game = {
       var key = event.which;
       if (key === 38) {
         // up
-        move
       }
       else if (key === 40) {
         // down
