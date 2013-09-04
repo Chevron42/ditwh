@@ -175,5 +175,18 @@ var Game = {
     else if (currTile.scene) {
       Events.startScene(currTile.scene);
     }
+  },
+
+  visifyTrap: function(trapChar) {
+    var tile;
+    for (var x = 1; x < this.MAP_WIDTH - 1; x += 1) {
+      for (var y = 1; y < this.MAP_HEIGHT - 1; y += 1) {
+        tile = this.map[x][y];
+        if (tile.value === trapChar) {
+          this.map[x][y].visible = true;
+        }
+      }
+    }
   }
+
 };
