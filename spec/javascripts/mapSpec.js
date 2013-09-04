@@ -14,19 +14,51 @@ describe("a map of Arkham", function() {
   });
 
   it("always has a path to the eastern tower", function() {
-
+    var path = true;
+    for (var i = 0; i < 1000; i += 1) {
+      map.create();
+      if (!map.pathfind('E')) {
+        path = false;
+        break;
+      }
+    }
+    expect(path).toBe(true);
   });
 
   it("always has a path to the western tower", function() {
-
+    var path = true;
+    for (var i = 0; i < 1000; i += 1) {
+      map.create();
+      if (!map.pathfind('W')) {
+        path = false;
+        break;
+      }
+    }
+    expect(path).toBe(true);
   });
 
   it("always has a path to the southern tower", function() {
-
+    var path = true;
+    for (var i = 0; i < 1000; i += 1) {
+      map.create();
+      if (!map.pathfind('S')) {
+        path = false;
+        break;
+      }
+    }
+    expect(path).toBe(true);
   });
 
   it("always has a path to the northern tower", function() {
-
+    var path = true;
+    for (var i = 0; i < 1000; i += 1) {
+      map.create();
+      if (!map.pathfind('N')) {
+        path = false;
+        break;
+      }
+    }
+    expect(path).toBe(true);
   });
 
 });

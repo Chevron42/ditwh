@@ -169,10 +169,6 @@ ROT.Map.Arkham.prototype.create = function() {
     var startHeight = sector.upperLeft[1];
     var endHeight = sector.lowerRight[1];
 
-    var rand;
-    var aChar;
-    var trap = false;
-
     // first, let's generate a maze submap for this sector
     var mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
 
@@ -185,28 +181,49 @@ ROT.Map.Arkham.prototype.create = function() {
     this.makePathEnds(sector);
 
     // now let's fill in the non-path spaces with dense traps
-    for (i = startWidth; i < endWidth; i += 1) {
-      for (j = startHeight; j < endHeight; j += 1) {
-        if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
+    // var rand;
+    // var aChar;
+    // var trap = false;
 
-          rand = ROT.RNG.getUniform();
-          if (rand < 0.39) {
-            aChar = sector.traps[0];
-            trap = true;
-          }
-          else if (rand < 0.79) {
-            aChar = sector.traps[1];
-            trap = true;
-          }
-          else {
-            aChar = this.TILE.SAFE;
-          }
+    // for (i = startWidth; i < endWidth; i += 1) {
+    //   for (j = startHeight; j < endHeight; j += 1) {
+    //     // tilde tiles MUST get traps
+    //     if (this.map[i][j].value === '~') {
+    //       rand = ROT.RNG.getUniform();
+    //       if (rand < 0.50) {
+    //         aChar = sector.traps[0];
+    //         trap = true;
+    //       }
+    //       else {
+    //         aChar = sector.traps[1];
+    //         trap = true;
+    //       }
 
-          this.map[i][j].value = aChar;
-          this.map[i][j].isTrap = trap;
-        }
-      }
-    }
+    //       this.map[i][j].value = aChar;
+    //       this.map[i][j].isTrap = trap;
+    //     }
+
+    //     // tiles outside the maze could be traps or not, nbd
+    //     else if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
+
+    //       rand = ROT.RNG.getUniform();
+    //       if (rand < 0.40) {
+    //         aChar = sector.traps[0];
+    //         trap = true;
+    //       }
+    //       else if (rand < 0.80) {
+    //         aChar = sector.traps[1];
+    //         trap = true;
+    //       }
+    //       else {
+    //         aChar = this.TILE.SAFE;
+    //       }
+
+    //       this.map[i][j].value = aChar;
+    //       this.map[i][j].isTrap = trap;
+    //     }
+    //   }
+    // }
 
   } // end sector generation
 
@@ -233,3 +250,28 @@ ROT.Map.Arkham.prototype.create = function() {
 
   return this.map;
 };
+
+ROT.Map.Arkham.prototype.pathfind(direction) {
+  var startPoint = [];
+  var endPoint = [];
+  if (direction === 'N') {
+    startPoint =
+  }
+  else if (direction === 'S') {
+
+  }
+  else if (direction === 'W') {
+
+  }
+  else if (direction === 'E') {
+
+  }
+}
+
+
+
+
+
+
+
+

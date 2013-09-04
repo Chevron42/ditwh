@@ -28,10 +28,13 @@ var Submap = function(aWidth, aHeight) {
       tile = new Tile('.');
       tile.onThePath = true;
     }
-    else {
+    else if (value === 1) {
       // give the walls a placeholder value
       tile = new Tile('~');
       tile.isTrap = true;
+    }
+    else {
+      tile = new Tile('x');
     }
     this.myLilMap[x][y] = tile;
   };
@@ -52,8 +55,20 @@ var Submap = function(aWidth, aHeight) {
 
   };
 
-  this.em = new ROT.Map.EllerMaze(this.width, this.height);
+  this.printToConsole = function() {
+    for (var i = 0; i < this.myLilMap[0].length; i += 1) {
+      var row = '';
+      for (var j = 0; j < this.myLilMap.length; j+= 1) {
+        row += this.myLilMap[j][i].value;
+      }
+      console.log(row);
+    }
+    console.log(' ');
+  };
+
+  this.em = new ROT.Map.EllerMaze(this.width, this.height, 8);
   this.em.create(this.mazeCallback.bind(this));
   this.shaveWalls();
+  this.printToConsole();
 
 };
