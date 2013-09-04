@@ -10,11 +10,40 @@ var Game = {
   EAST: [1, 0],
   WEST: [-1, 0],
 
+  // this code is duplicated in map.js!
+  // try to get rid of that later!
+  TILE: {
+    SAFE: '.',
+    WITCH_HOUSE: 'O',
+    BARRIER: 'X',
+    WEST_TRAP_1: '>',
+    WEST_TRAP_2: '+',
+    EAST_TRAP_1: '<',
+    EAST_TRAP_2: '=',
+    SOUTH_TRAP_1: '/',
+    SOUTH_TRAP_2: '#',
+    NORTH_TRAP_1: '\\',
+    NORTH_TRAP_2: '*',
+    EVENT: {
+      FRANK: 'F',
+      IWANICKI: 'I',
+      LIBRARY: 'L',
+      OLD_WOMAN: 'W',
+      STATUE: 'S',
+      UPHAM: 'U',
+      DOCTOR: 'D',
+      BROWN_JENKIN: 'B'
+    }
+  },
+
+  // Game.SCENES[Game.TILE.]
+
   init: function() {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
     document.body.appendChild(this.display.getContainer());
     this._generateMap();
 
+    // move the character when a key is pressed
     $(window).keydown(function(event) {
       var key = event.which;
       if (key === 38) {
@@ -59,12 +88,11 @@ var Game = {
 
   _generateMap: function() {
 
-    var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this. MAP_HEIGHT);
+    var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this.MAP_HEIGHT);
     this.map = arkham.create();
 
-    this._drawWholeMap(arkham);
-    // The following function expects arkham, not arkham.map
-    // this._drawVisibleMap();
+    // this._drawWholeMap(arkham);
+    this._drawVisibleMap();
 
     this._drawPlayer(this.currPos);
 
@@ -128,8 +156,15 @@ var Game = {
     Game.currPos[0] += direction[0];
     Game.currPos[1] += direction[1];
     Game.map[Game.currPos[0]][Game.currPos[1]].visible = true;
-    // Game.checkScene();
+    Game.checkScene();
     Game._drawVisibleMap();
     Game._drawPlayer();
+  },
+
+  checkScene: function() {
+    var currTile = Game.map[Game.currPos[0]][Game.currPos[1]];
+    if (currTile.scene) {
+      Events.startScene(currTile.scene);
+    }
   }
 };

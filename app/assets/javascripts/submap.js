@@ -45,16 +45,17 @@ var Submap = function(aWidth, aHeight) {
     this.myLilMap.pop();
 
     // take off the left-hand wall
-    this.myLilMap.splice(0, 1);
+    this.myLilMap.shift();
 
     // take off the bottom and top walls
     for (var i = 0; i < aWidth; i += 1) {
       this.myLilMap[i].pop();
-      this.myLilMap[i].splice(0, 1);
+      this.myLilMap[i].shift();
     }
 
   };
 
+  // for testing
   this.printToConsole = function() {
     for (var i = 0; i < this.myLilMap[0].length; i += 1) {
       var row = '';
@@ -66,9 +67,8 @@ var Submap = function(aWidth, aHeight) {
     console.log(' ');
   };
 
-  this.em = new ROT.Map.EllerMaze(this.width, this.height, 8);
+  this.em = new ROT.Map.EllerMaze(this.width, this.height);
   this.em.create(this.mazeCallback.bind(this));
   this.shaveWalls();
-  this.printToConsole();
 
 };

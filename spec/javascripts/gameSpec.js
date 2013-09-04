@@ -7,11 +7,11 @@ describe ("A game's", function() {
     });
 
     it ("moves the player up one tile if north tile is free", function() {
-      Game.currPos = [71, 21];
+      Game.currPos = [71, 20];
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([71, 20]);
+      expect(Game.currPos).toEqual([71, 19]);
     });
 
     it ("does not move the player if the north tile is a wall", function() {
@@ -19,19 +19,23 @@ describe ("A game's", function() {
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([34, 6]);
+      expect(Game.currPos).toEqual([34, 6]);
     });
 
   });
 
   describe ("moveSouth function", function() {
 
+    beforeEach(function() {
+      Game.init();
+    });
+
     it ("moves the player down one tile if south tile is free", function() {
-      Game.currPos = [71, 21];
+      Game.currPos = [71, 20];
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([71, 22]);
+      expect(Game.currPos).toEqual([71, 21]);
     });
 
     it ("does not move the player if the south tile is a wall", function() {
@@ -39,19 +43,23 @@ describe ("A game's", function() {
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([38, 32]);
+      expect(Game.currPos).toEqual([38, 32]);
     });
 
   });
 
   describe ("moveWest function", function() {
 
+    beforeEach(function() {
+      Game.init();
+    });
+
     it ("moves the player left one tile if west tile is free", function() {
-      Game.currPos = [71, 21];
+      Game.currPos = [71, 20];
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([70, 21]);
+      expect(Game.currPos).toEqual([70, 20]);
     });
 
     it ("does not move the player if the west tile is a wall", function() {
@@ -59,19 +67,23 @@ describe ("A game's", function() {
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([93, 7]);
+      expect(Game.currPos).toEqual([93, 7]);
     });
 
   });
 
   describe ("moveEast function", function() {
 
+    beforeEach(function() {
+      Game.init();
+    });
+
     it ("moves the player right one tile if east tile is free", function() {
-      Game.currPos = [71, 21];
+      Game.currPos = [71, 20];
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([72, 21]);
+      expect(Game.currPos).toEqual([72, 20]);
     });
 
     it ("does not move the player if the east tile is a wall", function() {
@@ -79,7 +91,7 @@ describe ("A game's", function() {
       var e = jQuery.Event("keydown");
       e.which = 38;
       $(window).trigger(e);
-      expect(Game.currPos).toBe([95, 7]);
+      expect(Game.currPos).toEqual([95, 7]);
     });
 
   });

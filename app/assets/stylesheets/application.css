@@ -21,3 +21,13 @@ h1 {
 body {
   text-align: center;
 }
+
+#narration {
+  height: 40px;
+  font-family: Futura, serif;
+}
+
+#choices {
+  height: 40px;
+  font-family: Futura, serif;
+}

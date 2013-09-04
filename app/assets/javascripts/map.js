@@ -28,6 +28,8 @@ ROT.Map.Arkham = function (width, height) {
     }
   }
 
+  // there's some duplicated code here sort of
+  // try to fix it
   this.TILE = {
     SAFE: '.',
     WITCH_HOUSE: 'O',
@@ -40,14 +42,16 @@ ROT.Map.Arkham = function (width, height) {
     SOUTH_TRAP_2: '#',
     NORTH_TRAP_1: '\\',
     NORTH_TRAP_2: '*',
-    FRANK: 'F',
-    IWANICKI: 'I',
-    LIBRARY: 'L',
-    OLD_WOMAN: 'W',
-    STATUE: 'S',
-    UPHAM: 'U',
-    DOCTOR: 'D',
-    BROWN_JENKIN: 'B'
+    EVENT: {
+      "frank": 'F',
+      "iwanicki": 'I',
+      "library": 'L',
+      "old woman": 'W',
+      "statuette": 'S',
+      "upham": 'U',
+      "doctor": 'D',
+      "brown jenkin": 'B'
+    }
   };
 
   // west sector
@@ -61,7 +65,7 @@ ROT.Map.Arkham = function (width, height) {
     lowerRight: [46, 41],
     mazeUpperLeft: [19, 10],
     mazeWidth: 27,
-    mazeHeight: 21,
+    mazeHeight: 23,
     traps: [this.TILE.WEST_TRAP_1, this.TILE.WEST_TRAP_2],
     // the following two variables specify lines of the map
     // that need to be clear to guarantee that this sector
@@ -78,7 +82,7 @@ ROT.Map.Arkham = function (width, height) {
     lowerLeft: [97, 41],
     lowerRight: [130, 41],
     mazeUpperLeft: [97, 10],
-    mazeWidth: 24,
+    mazeWidth: 25,
     mazeHeight: 21,
     traps: [this.TILE.EAST_TRAP_1, this.TILE.EAST_TRAP_2],
     horizontalEndPath: [[121, 20], [139, 20]],
@@ -92,9 +96,9 @@ ROT.Map.Arkham = function (width, height) {
     upperRight: [97, 27],
     lowerLeft: [46, 34],
     lowerRight: [97, 34],
-    mazeUpperLeft: [48, 28],
-    mazeWidth: 44,
-    mazeHeight: 5,
+    mazeUpperLeft: [46, 27],
+    mazeWidth: 51,
+    mazeHeight: 7,
     traps: [this.TILE.SOUTH_TRAP_1, this.TILE.SOUTH_TRAP_2],
     horizontalEndPath: [[50, 33], [94, 33]],
     verticalEndPath: [[70, 32], [70, 33]]
@@ -104,22 +108,22 @@ ROT.Map.Arkham = function (width, height) {
   this.MEADOW_HILL = {
     name: 'Meadow Hill',
     upperLeft: [46, 7],
-    upperRight: [97, 7],
+    upperRight: [96, 7],
     lowerLeft: [46, 15],
-    lowerRight: [97, 15],
+    lowerRight: [96, 15],
     mazeUpperLeft: [46, 9],
-    mazeWidth: 45,
-    mazeHeight: 6,
+    mazeWidth: 51,
+    mazeHeight: 7,
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
     horizontalEndPath: [[53, 7], [99, 7]],
     verticalEndPath: [[70, 7], [70, 8]]
   };
 
   this.CENTER = {
-    upperLeft: [47, 15],
-    upperRight: [92, 15],
-    lowerLeft: [47, 124],
-    lowerRight: [92, 124]
+    upperLeft: [48, 16],
+    upperRight: [95, 16],
+    lowerLeft: [47, 25],
+    lowerRight: [95, 25]
   };
 
   this.SECTORS = [this.MISKATONIC_U, this.ARKHAM_SQ, this.FOREST, this.MEADOW_HILL];
@@ -181,53 +185,109 @@ ROT.Map.Arkham.prototype.create = function() {
     this.makePathEnds(sector);
 
     // now let's fill in the non-path spaces with dense traps
-    // var rand;
-    // var aChar;
-    // var trap = false;
+    var rand;
+    var aChar;
+    var trap = false;
 
-    // for (i = startWidth; i < endWidth; i += 1) {
-    //   for (j = startHeight; j < endHeight; j += 1) {
-    //     // tilde tiles MUST get traps
-    //     if (this.map[i][j].value === '~') {
-    //       rand = ROT.RNG.getUniform();
-    //       if (rand < 0.50) {
-    //         aChar = sector.traps[0];
-    //         trap = true;
-    //       }
-    //       else {
-    //         aChar = sector.traps[1];
-    //         trap = true;
-    //       }
+    for (i = startWidth; i < endWidth; i += 1) {
+      for (j = startHeight; j < endHeight; j += 1) {
+        // tilde tiles MUST get traps
+        if (this.map[i][j].value === '~') {
+          rand = ROT.RNG.getUniform();
+          if (rand < 0.50) {
+            aChar = sector.traps[0];
+            trap = true;
+          }
+          else {
+            aChar = sector.traps[1];
+            trap = true;
+          }
 
-    //       this.map[i][j].value = aChar;
-    //       this.map[i][j].isTrap = trap;
-    //     }
+          this.map[i][j].value = aChar;
+          this.map[i][j].isTrap = trap;
+        }
 
-    //     // tiles outside the maze could be traps or not, nbd
-    //     else if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
+        // tiles outside the maze could be traps or not, nbd
+        else if (this.map[i][j].value !== ' ' && !this.map[i][j].onThePath) {
 
-    //       rand = ROT.RNG.getUniform();
-    //       if (rand < 0.40) {
-    //         aChar = sector.traps[0];
-    //         trap = true;
-    //       }
-    //       else if (rand < 0.80) {
-    //         aChar = sector.traps[1];
-    //         trap = true;
-    //       }
-    //       else {
-    //         aChar = this.TILE.SAFE;
-    //       }
+          rand = ROT.RNG.getUniform();
+          if (rand < 0.40) {
+            aChar = sector.traps[0];
+            trap = true;
+          }
+          else if (rand < 0.80) {
+            aChar = sector.traps[1];
+            trap = true;
+          }
+          else {
+            aChar = this.TILE.SAFE;
+          }
 
-    //       this.map[i][j].value = aChar;
-    //       this.map[i][j].isTrap = trap;
-    //     }
-    //   }
-    // }
+          this.map[i][j].value = aChar;
+          this.map[i][j].isTrap = trap;
+        }
+      }
+    }
 
   } // end sector generation
 
-  // finally, we have to mark what tiles are initially visible
+  // mark which tiles are initially visible
+  this.markVisibleTiles();
+
+  // set events at the center of the map
+  this.setEvents(this.CENTER);
+
+  // testing the pathfind function
+  // var path = this.pathfind('N');
+  // console.log(path);
+
+  return this.map;
+};
+
+ROT.Map.Arkham.prototype.pathfind = function(direction) {
+  var startPoint = [];
+  var endPoint = [];
+
+  if (direction === 'N') {
+    startPoint = [71, 15];
+    endPoint = [70, 6];
+  } else if (direction === 'S') {
+    startPoint = [71, 27];
+    endPoint = [70, 33];
+  } else if (direction === 'W') {
+    startPoint = [46, 20];
+    endPoint = [8, 20];
+  } else if (direction === 'E') {
+    startPoint = [96, 20];
+    endPoint = [130, 21];
+  }
+
+  var visited = [];
+  return this.pathfindGo(startPoint, endPoint, visited);
+};
+
+ROT.Map.Arkham.prototype.pathfindGo = function(aStart, anEnd) {
+  console.log('start: ' + aStart[0] + ', ' + aStart[1] + '; end: ' + anEnd[0] + ', ' + anEnd[1]);
+  var x = aStart[0];
+  var y = aStart[1];
+
+  if (aStart === anEnd) {
+    console.log(anEnd);
+    return true;
+  }
+  else if (this.map[x][y].pathfindVisited) {
+    return false;
+  }
+  else if (this.map[x][y].value !== '.') {
+    return false;
+  }
+
+  this.map[x][y].pathfindVisited = true;
+  return this.pathfindGo([x + 1, y], anEnd) || this.pathfindGo([x - 1, y], anEnd) || this.pathfindGo([x, y + 1], anEnd) || this.pathfindGo([x, y - 1], anEnd);
+
+};
+
+ROT.Map.Arkham.prototype.markVisibleTiles = function() {
   for (var x = 1; x < this.WIDTH - 1; x += 1) {
     for (var y = 1; y < this.HEIGHT - 1; y += 1) {
       var outerWall = false;
@@ -247,53 +307,39 @@ ROT.Map.Arkham.prototype.create = function() {
   this.map[0][20].visible = true;
   this.map[71][40].visible = true;
   this.map[140][20].visible = true;
-
-  return this.map;
 };
 
-ROT.Map.Arkham.prototype.pathfind = function(direction) {
-  var startPoint = [];
-  var endPoint = [];
-  if (direction === 'N') {
-    startPoint = [71, 14];
-    endPoint = [70, 6];
-  }
-  else if (direction === 'S') {
-    startPoint = [71, 27];
-    endPoint = [70, 33];
-  }
-  else if (direction === 'W') {
-    startPoint = [46, 20];
-    endPoint = [8, 20];
-  }
-  else if (direction === 'E') {
-    startPoint = [96, 20];
-    endPoint = [130, 21];
-  }
+ROT.Map.Arkham.prototype.setEvents = function() {
+  var centerWidth = this.CENTER.upperRight[0] - this.CENTER.upperLeft[0] + 1;
+  var centerHeight = this.CENTER.lowerLeft[1] - this.CENTER.upperLeft[1] + 1;
+  var widthOffset = this.CENTER.upperLeft[0];
+  var heightOffset = this.CENTER.upperLeft[1];
+  var l = Object.keys(this.TILE.EVENT).length;
 
-  return pathfindGo(startPoint, endPoint);
+  // the starting tile is already taken
+  var takenTiles = [[71, 20]];
+
+  var randW;
+  var randH;
+
+  for (var key in this.TILE.EVENT) {
+    var tileNotYetFound = true;
+    while (tileNotYetFound) {
+      randW = Math.floor(widthOffset + (ROT.RNG.getUniform() * centerWidth));
+      randH = Math.floor(heightOffset + (ROT.RNG.getUniform() * centerHeight));
+      console.log(randW + ', ' + randH);
+
+      if (takenTiles.indexOf([randW, randH]) === -1) {
+        takenTiles.push([randW, randH]);
+        // XXX
+        // THIS IS UGLY
+        // FIX IT
+        this.map[randW][randH].setScene(this.TILE.EVENT[key], key);
+        tileNotYetFound = false;
+      }
+    }
+  }
 };
-
-ROT.Map.Arkham.prototype.pathfindGo = function(aStart, anEnd) {
-  var x = aStart[0];
-  var y = aStart[1];
-  var foundAPath = false;
-
-  if (aStart === anEnd) {
-    return true;
-  }
-
-  if (this.map([aStart[0]][aStart[1]]).value !== '.') {
-    return false;
-  }
-
-  else {
-    pathfindGo([aStart[0], ])
-  }
-
-  return foundAPath;
-};
-
 
 
 
