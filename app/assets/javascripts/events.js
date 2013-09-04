@@ -4,7 +4,15 @@ var Events = {
     $('#narration').text(anEvent.text);
   },
   trap: function() {
-    $('#narration').text('walter gilman awakens in his bed at the witch house.');
+    $(window).off();
+    $('#narration').text('gilman hits a trap...');
+    $('canvas').animate({opacity: '0'}, 1000, 'linear', function() {
+      Game.currPos = [71, 20];
+      Game.drawVisibleMap();
+      $('#narration').html('gilman hits a trap...<br>he awakens in his bed at the witch house.');
+      $('canvas').css('opacity', '100');
+      Game.addKeydownListener();
+    });
   }
 };
 

@@ -44,26 +44,7 @@ var Game = {
     this._generateMap();
 
     // move the character when a key is pressed
-    $(window).keydown(function(event) {
-      var key = event.which;
-      if (key === 38) {
-        // up
-        Game.moveNorth(Game.currPos);
-      }
-      else if (key === 40) {
-        // down
-        Game.moveSouth(Game.currPos);
-      }
-      else if (key === 37) {
-        // left
-        Game.moveWest(Game.currPos);
-      }
-      else if (key === 39) {
-        // right
-        Game.moveEast(Game.currPos);
-      }
-      else {}
-    });
+    this.addKeydownListener();
 
     // for testing
     // click on a canvas spot and get its coordinates
@@ -86,13 +67,38 @@ var Game = {
     }
   },
 
+  addKeydownListener: function() {
+
+    $(window).keydown(function(event) {
+      var key = event.which;
+      if (key === 38) {
+        // up
+        Game.moveNorth(Game.currPos);
+      }
+      else if (key === 40) {
+        // down
+        Game.moveSouth(Game.currPos);
+      }
+      else if (key === 37) {
+        // left
+        Game.moveWest(Game.currPos);
+      }
+      else if (key === 39) {
+        // right
+        Game.moveEast(Game.currPos);
+      }
+      else {}
+    });
+
+  },
+
   _generateMap: function() {
 
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this.MAP_HEIGHT);
     this.map = arkham.create();
 
     // this._drawWholeMap(arkham);
-    this._drawVisibleMap();
+    this.drawVisibleMap();
 
     this._drawPlayer(this.currPos);
 
@@ -106,7 +112,7 @@ var Game = {
     }
   },
 
-  _drawVisibleMap: function() {
+  drawVisibleMap: function() {
     for (var x = 0; x < this.MAP_WIDTH; x += 1) {
       for (var y = 0; y < this.MAP_HEIGHT; y += 1) {
         if (this.map[x][y].visible) {
@@ -157,13 +163,16 @@ var Game = {
     Game.currPos[1] += direction[1];
     Game.map[Game.currPos[0]][Game.currPos[1]].visible = true;
     Game.checkScene();
-    Game._drawVisibleMap();
+    Game.drawVisibleMap();
     Game._drawPlayer();
   },
 
   checkScene: function() {
     var currTile = Game.map[Game.currPos[0]][Game.currPos[1]];
-    if (currTile.scene) {
+    if (currTile.isTrap) {
+      Events.trap();
+    }
+    else if (currTile.scene) {
       Events.startScene(currTile.scene);
     }
   }
