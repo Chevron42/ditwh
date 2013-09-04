@@ -35,6 +35,26 @@ var Game = {
       }
       else {}
     });
+
+    // for testing
+    // click on a canvas spot and get its coordinates
+    window.addEventListener("mousedown", getPosition, false);
+
+    function getPosition(event)
+    {
+      var x = event.pageX;
+      var y = event.pageY;
+
+      var canvas = document.getElementsByTagName("canvas")[0];
+
+      x -= canvas.offsetLeft;
+      y -= canvas.offsetTop;
+
+      x = Math.floor(x / 8);
+      y = Math.floor(y / 13);
+
+      console.log("x:" + x + " y:" + y);
+    }
   },
 
   _generateMap: function() {

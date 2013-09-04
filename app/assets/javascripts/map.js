@@ -251,22 +251,48 @@ ROT.Map.Arkham.prototype.create = function() {
   return this.map;
 };
 
-ROT.Map.Arkham.prototype.pathfind(direction) {
+ROT.Map.Arkham.prototype.pathfind = function(direction) {
   var startPoint = [];
   var endPoint = [];
   if (direction === 'N') {
-    startPoint =
+    startPoint = [71, 14];
+    endPoint = [70, 6];
   }
   else if (direction === 'S') {
-
+    startPoint = [71, 27];
+    endPoint = [70, 33];
   }
   else if (direction === 'W') {
-
+    startPoint = [46, 20];
+    endPoint = [8, 20];
   }
   else if (direction === 'E') {
-
+    startPoint = [96, 20];
+    endPoint = [130, 21];
   }
-}
+
+  return pathfindGo(startPoint, endPoint);
+};
+
+ROT.Map.Arkham.prototype.pathfindGo = function(aStart, anEnd) {
+  var x = aStart[0];
+  var y = aStart[1];
+  var foundAPath = false;
+
+  if (aStart === anEnd) {
+    return true;
+  }
+
+  if (this.map([aStart[0]][aStart[1]]).value !== '.') {
+    return false;
+  }
+
+  else {
+    pathfindGo([aStart[0], ])
+  }
+
+  return foundAPath;
+};
 
 
 
