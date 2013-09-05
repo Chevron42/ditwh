@@ -6,7 +6,7 @@ jQuery.get('http://localhost/index.html', function(data) {
 
 var arkham = new ROT.Map.Arkham(141, 41, emptyMap);
 
-describe("a map of Arkham", function() {
+xdescribe("a map of Arkham", function() {
 
   beforeEach(function() {
     arkham = new ROT.Map.Arkham(141, 41, emptyMap);
@@ -66,16 +66,11 @@ describe("a map of Arkham", function() {
   //   expect(path).toBe(true);
   // });
 
-  xit("always has 8 scripted events in the center section", function() {
-    var arkham;
-
+  it("always has 8 scripted events + the witch house in the center section", function() {
     var allCorrectCounts = true;
 
-    for (var k = 0; k < 100; k += 1) {
-
-      arkham = new ROT.Map.Arkham(141, 41, emptyMap);
+    for (var k = 0; k < 1000; k += 1) {
       arkham.create();
-
       var eventCount = 0;
 
       for (var i = arkham.CENTER.upperLeft[0]; i <= arkham.CENTER.upperRight[0]; i += 1) {
@@ -87,23 +82,20 @@ describe("a map of Arkham", function() {
       if (eventCount !== 9) {
         allCorrectCounts = false;
       }
-
     }
 
     expect(allCorrectCounts).toBe(true);
-
   });
 
   it("always has all unique events in the center section", function() {
     var alwaysAllUnique = true;
     var events = [];
     var aVal = '';
-    var arkham;
 
-    for (var k = 0; k < 100; k += 1) {
-
-      arkham = new ROT.Map.Arkham(141, 41, emptyMap);
+    for (var k = 0; k < 1000; k += 1) {
+      console.log(k);
       arkham.create();
+      events = [];
 
       for (var i = arkham.CENTER.upperLeft[0]; i < arkham.CENTER.upperRight[0]; i += 1) {
         for (var j = arkham.CENTER.upperLeft[1]; j < arkham.CENTER.lowerLeft[1]; j += 1) {
@@ -114,14 +106,13 @@ describe("a map of Arkham", function() {
             }
             else {
               alwaysAllUnique = false;
-              break;
             }
           }
         }
       }
     }
 
-    expect(allUnique).toBe(true);
+    expect(alwaysAllUnique).toBe(true);
   });
 
 });

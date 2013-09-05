@@ -123,6 +123,8 @@ ROT.Map.Arkham = function (width, height) {
 
 ROT.Map.Arkham.extend(ROT.Map);
 
+
+
 // takes an Eller Maze and replaces the appropriate sector of the map
 ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
   var plusWidth = sector.mazeUpperLeft[0];
@@ -134,6 +136,8 @@ ROT.Map.Arkham.prototype.replaceSubsection = function(sector, submap) {
     }
   }
 };
+
+
 
 // XXX
 // Clean this up
@@ -154,10 +158,12 @@ ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
   }
 };
 
-// WARNING: Do not use call this function multiple times for one object!
+
+
 ROT.Map.Arkham.prototype.create = function() {
 
   // create a map of Tile objects using the empty map as a template
+  // if a map was already created, this will erase it
   for (var x = 0; x < this.WIDTH; x += 1) {
     this.map[x] = [];
     for (var y = 0; y < this.HEIGHT; y += 1) {
@@ -178,6 +184,7 @@ ROT.Map.Arkham.prototype.create = function() {
     var endHeight = sector.lowerRight[1];
 
     // first, let's generate a maze submap for this sector
+    // xxx clean this up, take off the .myLilMap at the end
     var mySubmap = new Submap(sector.mazeWidth, sector.mazeHeight).myLilMap;
 
     // then, replace the corresponding section of the map with the maze
@@ -186,6 +193,7 @@ ROT.Map.Arkham.prototype.create = function() {
     // great! now that we've got some mazes, it's time to tend to those
     // odd tendrils at the four corners of the map.
     // let's make some guaranteed paths from each maze to each tower
+    // xxx should take this out of sector iteration
     this.makePathEnds(sector);
 
     // now let's fill in the non-path spaces with dense traps
@@ -249,6 +257,8 @@ ROT.Map.Arkham.prototype.create = function() {
   return this.map;
 };
 
+
+
 ROT.Map.Arkham.prototype.pathfind = function(direction) {
   var startPoint = [];
   var endPoint = [];
@@ -271,6 +281,8 @@ ROT.Map.Arkham.prototype.pathfind = function(direction) {
   return this.pathfindGo(startPoint, endPoint, visited);
 };
 
+
+
 ROT.Map.Arkham.prototype.pathfindGo = function(aStart, anEnd) {
   console.log('start: ' + aStart[0] + ', ' + aStart[1] + '; end: ' + anEnd[0] + ', ' + anEnd[1]);
   var x = aStart[0];
@@ -291,6 +303,8 @@ ROT.Map.Arkham.prototype.pathfindGo = function(aStart, anEnd) {
   return this.pathfindGo([x + 1, y], anEnd) || this.pathfindGo([x - 1, y], anEnd) || this.pathfindGo([x, y + 1], anEnd) || this.pathfindGo([x, y - 1], anEnd);
 
 };
+
+
 
 ROT.Map.Arkham.prototype.markVisibleTiles = function() {
   for (var x = 1; x < this.WIDTH - 1; x += 1) {
@@ -313,6 +327,8 @@ ROT.Map.Arkham.prototype.markVisibleTiles = function() {
   this.map[71][40].visible = true;
   this.map[140][20].visible = true;
 };
+
+
 
 // places the scripted events in the center area of the map
 ROT.Map.Arkham.prototype.setEvents = function() {
@@ -337,19 +353,17 @@ ROT.Map.Arkham.prototype.setEvents = function() {
       randW = Math.floor(widthOffset + (ROT.RNG.getUniform() * centerWidth));
       randH = Math.floor(heightOffset + (ROT.RNG.getUniform() * centerHeight));
 
-      if (takenTiles.indexOf([randW, randH]) === -1) {
-        takenTiles.push([randW, randH]);
-        // XXX
-        // THIS IS UGLY
-        // FIX IT
+      // XXX THIS IS UGLY
+      if (this.map[randW][randH].value === "."){
         this.map[randW][randH].setScene(this.TILE.EVENT[key], key);
         tileNotYetFound = false;
       }
     }
   }
 
-  console.log('events set');
 };
+
+
 
 // creates a Tile object and sets its color
 // XXX
@@ -359,6 +373,8 @@ ROT.Map.Arkham.prototype.createTile = function(aValue) {
   tile.setColor();
   return tile;
 };
+
+
 
 // for debugging
 ROT.Map.Arkham.prototype.printToConsole = function() {
