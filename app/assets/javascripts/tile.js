@@ -15,7 +15,7 @@ var Tile = function(aValue) {
   this.setColor = function() {
     var val = this.value;
     if (val === '%' || val === '&') {
-      this.color = '#0c0';
+      this.color = '#3a3';
     }
     else if (val === '‡') {
       this.color = '#0cf';
