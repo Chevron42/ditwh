@@ -75,7 +75,6 @@ var Submap = function(aWidth, aHeight) {
 
   this.em = new ROT.Map.EllerMaze(this.width, this.height);
   this.em.create(this.mazeCallback.bind(this));
-  this.printToConsole();
   this.shaveWalls();
-  this.printToConsole();
+
 };

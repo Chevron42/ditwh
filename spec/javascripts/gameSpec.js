@@ -1,4 +1,4 @@
-describe ("A game's", function() {
+xdescribe ("A game's", function() {
 
   describe ("moveNorth function", function() {
 

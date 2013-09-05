@@ -123,7 +123,7 @@ var Game = {
   },
 
   _drawPlayer: function() {
-    this.display.draw(this.currPos[0], this.currPos[1], '@');
+    this.display.draw(this.currPos[0], this.currPos[1], '@', '#3a3');
   },
 
   moveNorth: function(pos) {

@@ -19,15 +19,6 @@ ROT.Map.Arkham = function (width, height) {
 
   this.map = [];
 
-  // create a map of Tile objects using the empty map as a template
-  for (var i = 0; i < this.WIDTH; i += 1) {
-    this_height = this.HEIGHT;
-    this.map[i] = [];
-    for (var j = 0; j < this_height; j += 1) {
-      this.map[i].push(this.createTile(anEmptyMap[i][j]));
-    }
-  }
-
   // there's some duplicated code here sort of
   // try to fix it
   this.TILE = {
@@ -163,7 +154,16 @@ ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
   }
 };
 
+// WARNING: Do not use call this function multiple times for one object!
 ROT.Map.Arkham.prototype.create = function() {
+
+  // create a map of Tile objects using the empty map as a template
+  for (var x = 0; x < this.WIDTH; x += 1) {
+    this.map[x] = [];
+    for (var y = 0; y < this.HEIGHT; y += 1) {
+      this.map[x].push(this.createTile(anEmptyMap[x][y]));
+    }
+  }
 
   // okay, here's where all the work gets done
   var s,
@@ -322,7 +322,10 @@ ROT.Map.Arkham.prototype.setEvents = function() {
   var heightOffset = this.CENTER.upperLeft[1];
   var l = Object.keys(this.TILE.EVENT).length;
 
-  // the starting tile is already taken
+  // draw the witch house at the center tile
+  this.map[71][20].value = '@';
+
+  // the witch house tile is already taken
   var takenTiles = [[71, 20]];
 
   var randW;
@@ -344,6 +347,8 @@ ROT.Map.Arkham.prototype.setEvents = function() {
       }
     }
   }
+
+  console.log('events set');
 };
 
 // creates a Tile object and sets its color
@@ -355,7 +360,17 @@ ROT.Map.Arkham.prototype.createTile = function(aValue) {
   return tile;
 };
 
-
+// for debugging
+ROT.Map.Arkham.prototype.printToConsole = function() {
+  for (var i = 0; i < this.map[0].length; i += 1) {
+    var row = '';
+    for (var j = 0; j < this.map.length; j+= 1) {
+      row += this.map[j][i].value;
+    }
+    console.log(row);
+  }
+  console.log(' ');
+};
 
 
 
