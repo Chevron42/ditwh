@@ -1,10 +1,19 @@
 var Events = {
+  eventPanel: $('#eventPanel'),
+  eventTitle: $('#eventPanel.modal-title'),
+  eventContent: $('#eventPanel.modal-body'),
+
   startScene: function(sceneName) {
     console.log('window off');
     $(window).off();
     var anEvent = Events.Setpieces[sceneName];
     var passed = false;
     $('#narration').text(anEvent.text);
+
+    eventTitle.text(anEvent.title);
+    eventContent.text(anEvent.text);
+    eventPanel.modal('show');
+
     passed = true;
     if (passed) {
       console.log('about to visify');
@@ -57,8 +66,18 @@ Events.Setpieces = {
     trapReward: '\\'
   },
   "upham": {
-    text: "gilman visits the office of professor upham.",
-    trapReward: '+'
+    text: "\"i won't tell you again, gilman, that book is off limits to students.\" " +
+    "gilman could see this wasn't getting him anywhere. but what if he tried a different tactic? " +
+    "he relaxed into his chair and began to discuss...",
+    trapReward: '+',
+    answers: ['poker', 'cards', 'gambling'],
+
+    success: "suddenly, professor upham seemed to open up. \"alright, boy, i'll tell you this, and only this. " +
+    "'the gate lies where science and superstition meet, at the clock's clockwise three.' " +
+    "it's all my adviser told me, and it's all you're getting. i won't be responsible for what happens to you if " +
+    "you open that book.",
+
+    failure: "professor upham quickly shuttled gilman out the door."
   },
   "doctor": {
     text: "the university doctor tells gilman he needs more rest.",

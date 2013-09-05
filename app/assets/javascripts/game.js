@@ -42,6 +42,7 @@ var Game = {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
     document.body.appendChild(this.display.getContainer());
     this._generateMap();
+    this._makeDialogWindow();
 
     // move the character when a key is pressed
     this.addKeydownListener();
@@ -65,6 +66,11 @@ var Game = {
 
       console.log("x:" + x + " y:" + y);
     }
+  },
+
+  _makeDialogWindow: function() {
+    var dialog = $('<div id="dialog"></div>');
+    $('body').append(dialog);
   },
 
   addKeydownListener: function() {
@@ -137,7 +143,7 @@ var Game = {
   moveSouth: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x][y - 1].value !== ' ') {
+    if (Game.map[x][y + 1].value !== ' ') {
       Game.move(Game.SOUTH);
     }
   },
@@ -145,7 +151,7 @@ var Game = {
   moveWest: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x][y - 1].value !== ' ') {
+    if (Game.map[x - 1][y].value !== ' ') {
       Game.move(Game.WEST);
     }
   },
@@ -153,7 +159,7 @@ var Game = {
   moveEast: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x][y - 1].value !== ' ') {
+    if (Game.map[x + 1][y].value !== ' ') {
       Game.move(Game.EAST);
     }
   },
