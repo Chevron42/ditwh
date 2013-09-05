@@ -14,14 +14,14 @@ var Tile = function(aValue) {
 
   this.setColor = function() {
     var val = this.value;
-    if (val === '%' || val === '&') {
+    if (val === '&' || val === '?') {
       this.color = '#3a3';
     }
     else if (val === '‡') {
       this.color = '#0cf';
     }
     else if (val === 'Ω') {
-      this.color = '#f0f';
+      this.color = '#c3c';
     }
   };
 

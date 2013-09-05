@@ -115,8 +115,8 @@ ROT.Map.Arkham = function (width, height) {
     mazeWidth: 51,
     mazeHeight: 7,
     traps: [this.TILE.NORTH_TRAP_1, this.TILE.NORTH_TRAP_2],
-    horizontalEndPath: [[53, 7], [99, 7]],
-    verticalEndPath: [[70, 7], [70, 8]]
+    horizontalEndPath: [[53, 8], [85, 8]],
+    verticalEndPath: [[70, 6], [70, 8]]
   };
 
   this.CENTER = {
@@ -150,12 +150,16 @@ ROT.Map.Arkham.prototype.makePathEnds = function(sector) {
 
   // make the necessary horizontal path
   for (var i = sector.horizontalEndPath[0][0]; i < sector.horizontalEndPath[1][0]; i += 1) {
-    this.map[i][sector.horizontalEndPath[0][1]].onThePath = true;
+    var tileA = this.map[i][sector.horizontalEndPath[0][1]];
+    tileA.onThePath = true;
+    tileA.trap = false;
   }
 
   // make the necessary vertical path
   for (var j = sector.verticalEndPath[0][1]; j < sector.verticalEndPath[1][1]; j += 1) {
-    this.map[sector.verticalEndPath[0][0]][j].onThePath = true;
+    var tileB = this.map[sector.verticalEndPath[0][0]][j];
+    tileB.onThePath = true;
+    tileB.trap = false;
   }
 };
 
@@ -221,6 +225,7 @@ ROT.Map.Arkham.prototype.create = function() {
           }
           else {
             aChar = this.TILE.SAFE;
+            trap = false;
           }
 
           this.map[i][j].value = aChar;
