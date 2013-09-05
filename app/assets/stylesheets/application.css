@@ -25,6 +25,8 @@ body {
 #narration {
   height: 40px;
   font-family: Futura, serif;
+  width: 900px;
+  margin: 0 auto;
 }
 
 #choices {

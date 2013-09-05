@@ -1,25 +1,35 @@
 var Events = {
-  eventPanel: $('#eventPanel'),
-  eventTitle: $('#eventPanel.modal-title'),
-  eventContent: $('#eventPanel.modal-body'),
-
   startScene: function(sceneName) {
-    console.log('window off');
     $(window).off();
     var anEvent = Events.Setpieces[sceneName];
     var passed = false;
-    $('#narration').text(anEvent.text);
 
-    eventTitle.text(anEvent.title);
-    eventContent.text(anEvent.text);
-    eventPanel.modal('show');
+    $('#eventPanel .modal-title').text(anEvent.title);
+    $('#eventPanel .modal-body').text(anEvent.text);
+    $('#eventPanel').modal('show');
 
-    passed = true;
-    if (passed) {
-      console.log('about to visify');
-      Game.visifyTrap(anEvent.trapReward);
-      this.goHome();
-    }
+    $('#guess-button').off();
+    $('#guess-button').click(function() {
+      var guess = $('#guess').val();
+      passed = anEvent.answers.indexOf(guess) !== -1 ? true : false;
+
+      if (passed) {
+        Game.visifyTrap(anEvent.trapReward);
+        $('#narration').text(anEvent.success);
+      }
+      else {
+        $('#narration').text(anEvent.failure);
+      }
+
+      $('#eventPanel').modal('hide');
+      Events.goHome();
+    });
+
+  },
+
+  checkGuess: function(answers) {
+    var guess = $('#guess').val();
+    return (answers.indexOf(guess) !== -1) ? true : false;
   },
 
   goHome: function() {
@@ -47,23 +57,38 @@ var Events = {
 Events.Setpieces = {
   "frank": {
     text: "gilman speaks with his friend, frank elwood.",
-    trapReward: '#'
+    trapReward: '#',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "iwanicki": {
     text: "father iwanicki gives gilman a crucifix.",
-    trapReward: '<'
+    trapReward: '<',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "library": {
     text: "gilman spends a late night studying at the library.",
-    trapReward: '>'
+    trapReward: '>',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "old woman": {
     text: "gilman sees an old woman in the alleyway.",
-    trapReward: '*'
+    trapReward: '*',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "statuette": {
     text: "gilman finds a strange statuette in his room.",
-    trapReward: '\\'
+    trapReward: '\\',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "upham": {
     text: "\"i won't tell you again, gilman, that book is off limits to students.\" " +
@@ -81,10 +106,16 @@ Events.Setpieces = {
   },
   "doctor": {
     text: "the university doctor tells gilman he needs more rest.",
-    trapReward: '='
+    trapReward: '=',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   },
   "brown jenkin": {
     text: "gilman sees a rat with a human face.",
-    trapReward: '/'
+    trapReward: '/',
+    answers: [],
+    success: 'success',
+    failure: 'failure'
   }
 };

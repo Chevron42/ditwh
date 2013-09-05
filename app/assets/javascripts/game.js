@@ -36,8 +36,6 @@ var Game = {
     }
   },
 
-  // Game.SCENES[Game.TILE.]
-
   init: function() {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
     document.body.appendChild(this.display.getContainer());
@@ -103,8 +101,8 @@ var Game = {
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this.MAP_HEIGHT);
     this.map = arkham.create();
 
-    this._drawWholeMap(arkham);
-    // this.drawVisibleMap();
+    // this._drawWholeMap(arkham);
+    this.drawVisibleMap();
 
     this._drawPlayer(this.currPos);
 
@@ -168,9 +166,9 @@ var Game = {
     Game.currPos[0] += direction[0];
     Game.currPos[1] += direction[1];
     Game.map[Game.currPos[0]][Game.currPos[1]].visible = true;
-    Game.checkScene();
     Game.drawVisibleMap();
     Game._drawPlayer();
+    Game.checkScene();
   },
 
   checkScene: function() {
