@@ -107,7 +107,7 @@ var Game = {
   _drawWholeMap: function(map) {
     for (var x = 0; x < map.WIDTH; x += 1) {
       for (var y = 0; y < map.HEIGHT; y += 1) {
-        this.display.draw(x, y, map.map[x][y].value);
+        this.display.draw(x, y, map.map[x][y].value, this.map[x][y].color);
       }
     }
   },
@@ -116,7 +116,7 @@ var Game = {
     for (var x = 0; x < this.MAP_WIDTH; x += 1) {
       for (var y = 0; y < this.MAP_HEIGHT; y += 1) {
         if (this.map[x][y].visible) {
-          this.display.draw(x, y, this.map[x][y].value);
+          this.display.draw(x, y, this.map[x][y].value, this.map[x][y].color);
         }
       }
     }

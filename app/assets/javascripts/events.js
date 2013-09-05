@@ -1,5 +1,7 @@
 var Events = {
   startScene: function(sceneName) {
+    console.log('window off');
+    $(window).off();
     var anEvent = Events.Setpieces[sceneName];
     var passed = false;
     $('#narration').text(anEvent.text);
@@ -16,7 +18,7 @@ var Events = {
       Game.currPos = [71, 20];
       Game.drawVisibleMap();
       $('canvas').css('opacity', '100');
-      // Game.addKeydownListener();
+      Game.addKeydownListener();
     });
   },
 

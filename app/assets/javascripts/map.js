@@ -24,7 +24,7 @@ ROT.Map.Arkham = function (width, height) {
     this_height = this.HEIGHT;
     this.map[i] = [];
     for (var j = 0; j < this_height; j += 1) {
-      this.map[i].push(new Tile(anEmptyMap[i][j]));
+      this.map[i].push(this.createTile(anEmptyMap[i][j]));
     }
   }
 
@@ -309,6 +309,7 @@ ROT.Map.Arkham.prototype.markVisibleTiles = function() {
   this.map[140][20].visible = true;
 };
 
+// places the scripted events in the center area of the map
 ROT.Map.Arkham.prototype.setEvents = function() {
   var centerWidth = this.CENTER.upperRight[0] - this.CENTER.upperLeft[0] + 1;
   var centerHeight = this.CENTER.lowerLeft[1] - this.CENTER.upperLeft[1] + 1;
@@ -327,7 +328,6 @@ ROT.Map.Arkham.prototype.setEvents = function() {
     while (tileNotYetFound) {
       randW = Math.floor(widthOffset + (ROT.RNG.getUniform() * centerWidth));
       randH = Math.floor(heightOffset + (ROT.RNG.getUniform() * centerHeight));
-      console.log(randW + ', ' + randH);
 
       if (takenTiles.indexOf([randW, randH]) === -1) {
         takenTiles.push([randW, randH]);
@@ -340,6 +340,16 @@ ROT.Map.Arkham.prototype.setEvents = function() {
     }
   }
 };
+
+// creates a Tile object and sets its color
+// XXX
+// Any way to do this within the Tile constructor...?
+ROT.Map.Arkham.prototype.createTile = function(aValue) {
+  tile = new Tile(aValue);
+  tile.setColor();
+  return tile;
+};
+
 
 
 

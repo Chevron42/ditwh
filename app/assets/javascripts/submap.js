@@ -25,16 +25,13 @@ var Submap = function(aWidth, aHeight) {
     var rand;
 
     if (value === 0) {
-      tile = new Tile('.');
+      tile = this.createTile('.');
       tile.onThePath = true;
     }
     else if (value === 1) {
       // give the walls a placeholder value
-      tile = new Tile('~');
+      tile = this.createTile('~');
       tile.isTrap = true;
-    }
-    else {
-      tile = new Tile('x');
     }
     this.myLilMap[x][y] = tile;
   };
@@ -65,6 +62,15 @@ var Submap = function(aWidth, aHeight) {
       console.log(row);
     }
     console.log(' ');
+  };
+
+  // creates a Tile object and sets its color
+  // XXX
+  // Any way to do this within the Tile constructor...?
+  this.createTile = function(aValue) {
+    tile = new Tile(aValue);
+    tile.setColor();
+    return tile;
   };
 
   this.em = new ROT.Map.EllerMaze(this.width, this.height);
