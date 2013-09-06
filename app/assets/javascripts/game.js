@@ -142,7 +142,7 @@ var Game = {
   moveSouth: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    var target = Game.map[x][y + 1];
+    var target = Game.map[x][y + 1].value;
     if (target !== ' ' && target !== 'X') {
       Game.move(Game.SOUTH);
     }
