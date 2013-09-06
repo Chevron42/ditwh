@@ -3,20 +3,24 @@
 <div class="modal fade" id="eventPanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title"></h4>
-        </div>
-        <div class="modal-body">
-        </div>
-        <div>
-          <input type="text" id="guess" />
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="guess-button" class="btn btn-default">→</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div>
+
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+      </div>
+
+      <div class="modal-body">
+      </div>
+
+      <div>
+        <input type="text" id="guess" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="guess-button" class="btn btn-default">→</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <%= javascript_tag do %>
   window.map = <%=raw @map.to_json %>;

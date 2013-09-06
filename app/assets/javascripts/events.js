@@ -6,7 +6,7 @@ var Events = {
 
     $('#eventPanel .modal-title').text(anEvent.title);
     $('#eventPanel .modal-body').text(anEvent.text);
-    $('#eventPanel').modal('show');
+    $('#eventPanel').modal({ backdrop: 'static', keyboard: true });
 
     $('#guess-button').off();
     $('#guess-button').click(function() {
@@ -22,6 +22,7 @@ var Events = {
       }
 
       $('#eventPanel').modal('hide');
+      $('#guess').val('');
       Events.goHome();
     });
 
@@ -56,41 +57,52 @@ var Events = {
 
 Events.Setpieces = {
   "frank": {
+    title: "frank elwood",
     text: "gilman speaks with his friend, frank elwood.",
     trapReward: '#',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "iwanicki": {
+    title: "father iwanicki",
     text: "father iwanicki gives gilman a crucifix.",
     trapReward: '<',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "library": {
+    title: "miskatonic university library",
     text: "gilman spends a late night studying at the library.",
     trapReward: '>',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "old woman": {
+    title: "the old woman in the alley",
     text: "gilman sees an old woman in the alleyway.",
     trapReward: '*',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "statuette": {
+    title: "the strange statuette",
     text: "gilman finds a strange statuette in his room.",
     trapReward: '\\',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "upham": {
+    title: "professor upham",
     text: "\"i won't tell you again, gilman, that book is off limits to students.\" " +
     "gilman could see this wasn't getting him anywhere. but what if he tried a different tactic? " +
     "he relaxed into his chair and began to discuss...",
@@ -98,23 +110,27 @@ Events.Setpieces = {
     answers: ['poker', 'cards', 'gambling'],
 
     success: "suddenly, professor upham seemed to open up. \"alright, boy, i'll tell you this, and only this. " +
-    "'the gate lies where science and superstition meet, at the clock's clockwise three.' " +
+    "'at the clock's clockwise three, where science and stories meet.' " +
     "it's all my adviser told me, and it's all you're getting. i won't be responsible for what happens to you if " +
-    "you open that book.",
+    "you open that book.\"",
 
     failure: "professor upham quickly shuttled gilman out the door."
   },
+
   "doctor": {
+    title: "arkham town doctor",
     text: "the university doctor tells gilman he needs more rest.",
     trapReward: '=',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   },
+
   "brown jenkin": {
+    title: "brown jenkin",
     text: "gilman sees a rat with a human face.",
     trapReward: '/',
-    answers: [],
+    answers: ['correct'],
     success: 'success',
     failure: 'failure'
   }

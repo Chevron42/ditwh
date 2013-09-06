@@ -133,7 +133,8 @@ var Game = {
   moveNorth: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x][y - 1].value !== ' ') {
+    var target = Game.map[x][y - 1].value;
+    if (target !== ' ' && target !== 'X') {
       Game.move(Game.NORTH);
     }
   },
@@ -141,7 +142,8 @@ var Game = {
   moveSouth: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x][y + 1].value !== ' ') {
+    var target = Game.map[x][y + 1];
+    if (target !== ' ' && target !== 'X') {
       Game.move(Game.SOUTH);
     }
   },
@@ -149,7 +151,8 @@ var Game = {
   moveWest: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x - 1][y].value !== ' ') {
+    var target = Game.map[x - 1][y].value;
+    if (target !== ' ' && target !== 'X') {
       Game.move(Game.WEST);
     }
   },
@@ -157,7 +160,8 @@ var Game = {
   moveEast: function(pos) {
     var x = pos[0];
     var y = pos[1];
-    if (Game.map[x + 1][y].value !== ' ') {
+    var target = Game.map[x + 1][y].value;
+    if (target !== ' ' && target !== 'X') {
       Game.move(Game.EAST);
     }
   },
