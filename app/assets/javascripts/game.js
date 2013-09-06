@@ -181,7 +181,7 @@ var Game = {
       Events.trap();
     }
     else if (currTile.scene) {
-      Events.startScene(currTile.scene);
+      Events.startScene(currTile);
     }
   },
 

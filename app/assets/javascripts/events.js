@@ -1,7 +1,7 @@
 var Events = {
-  startScene: function(sceneName) {
+  startScene: function(sceneTile) {
     $(window).off();
-    var anEvent = Events.Setpieces[sceneName];
+    var anEvent = Events.Setpieces[sceneTile.scene];
     var passed = false;
 
     $('#eventPanel .modal-title').text(anEvent.title);
@@ -16,6 +16,7 @@ var Events = {
       if (passed) {
         Game.visifyTrap(anEvent.trapReward);
         $('#narration').text(anEvent.success);
+        sceneTile.goDark();
       }
       else {
         $('#narration').text(anEvent.failure);

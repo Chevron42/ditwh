@@ -25,4 +25,9 @@ var Tile = function(aValue) {
     }
   };
 
+  this.goDark = function() {
+    this.color = '#555';
+    this.scene = null;
+  };
+
 };
