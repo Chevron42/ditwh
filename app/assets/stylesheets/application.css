@@ -27,6 +27,8 @@ body {
   font-family: Futura, serif;
   width: 900px;
   margin: 0 auto;
+  margin-top: -15px;
+  margin-bottom: 15px;
 }
 
 #choices {
