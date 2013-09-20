@@ -108,7 +108,7 @@ Events.Setpieces = {
     "gilman could see this wasn't getting him anywhere. but what if he tried a different tactic? " +
     "he relaxed into his chair and began to discuss...",
     trapReward: '+',
-    answers: ['poker', 'cards', 'gambling'],
+    answers: ['poker', 'cards', 'gambling', 'correct'],
 
     success: "suddenly, professor upham seemed to open up. \"alright, boy, i'll tell you this, and only this. " +
     "'at the clock's clockwise three, where science and stories meet.' " +
