@@ -1,5 +1,6 @@
 <h1>dreams in the witch house</h1>
 <div id="narration">arkham, massachusetts. 1928.<br>walter gilman awakened in his bed at the witch house.</div>
+<div id="map"></div>
 <div class="modal fade" id="eventPanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -25,3 +26,7 @@
 <%= javascript_tag do %>
   window.map = <%=raw @map.to_json %>;
 <% end %>
+
+<div id="rules">
+  this game is a work in progress. the player's ultimate objective is to reach the purple omega.<br>X's are gates that must be unlocked. to unlock the gates, the player must explore the map and answer riddles.<br>if you encounter a riddle, for now you can type in 'correct' to see what happens.
+</div>

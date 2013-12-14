@@ -1,6 +1,6 @@
 // we have to create a little submap prototype
 // in order for the callback to work
-// (since they're designed to bind this context
+// (since they're designed to bind this context)
 
 var Submap = function(aWidth, aHeight) {
   // we need to add 2 because the Eller Maze

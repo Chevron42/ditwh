@@ -35,3 +35,11 @@ body {
   height: 40px;
   font-family: Futura, serif;
 }
+
+#rules {
+  font-style: italic;
+  width: 900px;
+  margin: 0 auto;
+  font-family: Futura, serif;
+  padding: 20px 0 20px;
+}

@@ -38,7 +38,7 @@ var Game = {
 
   init: function() {
     this.display = new ROT.Display({ width: this.MAP_WIDTH, height: this.MAP_HEIGHT, fontSize: 13 });
-    document.body.appendChild(this.display.getContainer());
+    document.getElementById('map').appendChild(this.display.getContainer());
     this._generateMap();
     this._makeDialogWindow();
 
