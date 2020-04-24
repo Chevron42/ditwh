@@ -195,6 +195,9 @@ var Game = {
         }
       }
     }
-  }
+  },
 
+  openGate: function(gateName) {
+    //open gate and change X to .
+  }
 };

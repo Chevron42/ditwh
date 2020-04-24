@@ -14,9 +14,14 @@ var Events = {
       passed = anEvent.answers.indexOf(guess) !== -1 ? true : false;
 
       if (passed) {
-        Game.visifyTrap(anEvent.trapReward);
-        $('#narration').text(anEvent.success);
-        sceneTile.goDark();
+        if (anEvent.opensGate) {
+          Game.openGate(anEvent.gateOpened) //have to add openGate method to Game and specify the gate in setpiece
+        }
+        else {
+          Game.visifyTrap(anEvent.trapReward);
+          $('#narration').text(anEvent.success);
+          sceneTile.goDark();
+        }
       }
       else {
         $('#narration').text(anEvent.failure);
@@ -59,7 +64,7 @@ var Events = {
 Events.Setpieces = {
   "frank": {
     title: "frank elwood",
-    text: "gilman speaks with his friend, frank elwood.",
+    text: "ilman spegaks with his friend, frank elwood.",
     trapReward: '#',
     answers: ['correct'],
     success: 'success',
@@ -134,5 +139,42 @@ Events.Setpieces = {
     answers: ['correct'],
     success: 'success',
     failure: 'failure'
+  },
+
+  //East Point
+  "fairy ring": {
+    title: "fairy ring",
+    opensGate: true,
+    gateOpened: "south1",
+    text: "gilman steps into the fairy ring.",
+    trapReward: '',
+    answers: ['correct'],
+    success: 'success',
+    failure: 'failure'
+  },
+
+  //West Point
+  "cauldron": {
+    title: "cauldron",
+    opensGate: true,
+    gateOpened: "south2",
+    text: "gilman plunges his hand into the bubbling cauldron.",
+    trapReward: '',
+    answers: ['correct'],
+    success: 'success',
+    failure: 'failure'
+  },
+
+  //South Point
+  "tower": {
+    title: "tower",
+    opensGate: true,
+    gateOpened: "north1",
+    text: "gilman climbs to the top of the tower.",
+    trapReward: '',
+    answers: ['correct'],
+    success: 'success',
+    failure: 'failure'
   }
+
 };
