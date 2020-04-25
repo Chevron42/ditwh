@@ -19,9 +19,9 @@ var Events = {
         }
         else {
           Game.visifyTrap(anEvent.trapReward);
-          $('#narration').text(anEvent.success);
-          sceneTile.goDark();
         }
+        $('#narration').text(anEvent.success);
+          sceneTile.goDark();
       }
       else {
         $('#narration').text(anEvent.failure);
@@ -149,7 +149,7 @@ Events.Setpieces = {
     text: "gilman steps into the fairy ring.",
     trapReward: '',
     answers: ['correct'],
-    success: 'success',
+    success: 'gate opened',
     failure: 'failure'
   },
 
@@ -161,7 +161,7 @@ Events.Setpieces = {
     text: "gilman plunges his hand into the bubbling cauldron.",
     trapReward: '',
     answers: ['correct'],
-    success: 'success',
+    success: 'gate opened',
     failure: 'failure'
   },
 
@@ -173,7 +173,7 @@ Events.Setpieces = {
     text: "gilman climbs to the top of the tower.",
     trapReward: '',
     answers: ['correct'],
-    success: 'success',
+    success: 'gate opened',
     failure: 'failure'
   }
 

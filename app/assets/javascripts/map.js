@@ -174,12 +174,13 @@ ROT.Map.Arkham.prototype.create = function() {
   eastPoint.setScene(eastPoint.value, "fairy ring")
   westPoint.setScene(westPoint.value, "cauldron")
   
-  this.gates = {
-    north1: this.map[5][70],
-    south1: this.map[34][70],
-    south2: this.map[35][70]
-  }
-  
+  //This doesnt actually do anything because Game object only gets this.map
+  // this.gates = {
+  //   north1: this.map[5][70],
+  //   south1: this.map[34][70],
+  //   south2: this.map[35][70]
+  // }
+
   // okay, here's where all the work gets done
   var s,
     j,

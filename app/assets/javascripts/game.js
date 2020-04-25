@@ -100,8 +100,13 @@ var Game = {
 
     var arkham = new ROT.Map.Arkham(this.MAP_WIDTH, this.MAP_HEIGHT);
     this.map = arkham.create();
+    this.gates = {
+        north1: this.map[5][70],
+        south1: this.map[34][70],
+        south2: this.map[35][70]
+      }
 
-    // this._drawWholeMap(arkham);
+    //this._drawWholeMap(arkham);
     this.drawVisibleMap();
 
     this._drawPlayer(this.currPos);
@@ -198,6 +203,7 @@ var Game = {
   },
 
   openGate: function(gateName) {
-    //open gate and change X to .
+    var gateTile = this.gates[gateName];
+    gateTile.value = ".";
   }
 };

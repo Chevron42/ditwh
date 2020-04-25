@@ -4,7 +4,6 @@ var Tile = function(aValue) {
   this.visible = false;
   this.onThePath = false;
   this.isTrap = false;
-  this.isGate = false;
   this.scene = null;
   this.color = '#fff';
 
